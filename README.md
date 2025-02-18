@@ -50,9 +50,22 @@ clippy set_model <model_name>:<your_api_key>
 ### Examples
 
 ````bash
-$ clippy set_model gemini-2.0-flash-thinking-exp-01-21:<gemini-api-key>
+$ clippy set_model gpt-4o:<openai-api-key>
+Model 'gpt-4o' set successfully.
+Model 'gpt-4o' set as default.
+$ clippy set_model gemini-2.0-flash:<gemini-api-key> --default
+Model 'gemini-2.0-flash' set successfully.
+Model 'gemini-2.0-flash' set as default.
+$ clippy list_models
+
+Configured Models:
+  gpt-4o
+* gemini-2.0-flash
+
+* indicates default model
+
 $ clippy ask "what is the capital of France?"
-Sending prompt to model 'gemini-2.0-flash-thinking-exp-01-21'...
+Sending prompt to model 'gemini-2.0-flash'...
 
 AI Response:
 
@@ -60,7 +73,7 @@ The capital of France is **Paris**.
 
 $ clippy ask "Give me the commandline to list all the files in folder projects/ recursively. The command should show list the file names only and noth
 ing else"
-Sending prompt to model 'gemini-2.0-flash-exp'...
+Sending prompt to model 'gemini-2.0-flash'...
 
 AI Response:
 
@@ -69,7 +82,7 @@ find projects/ -type f -print
 ```
 
 $ man ffmpeg | clippy ask "give me the ffmpeg commandline to shorten a video in half"
-Sending prompt to model 'gemini-2.0-flash-exp'...
+Sending prompt to model 'gemini-2.0-flash'...
 
 AI Response:
 
@@ -84,7 +97,7 @@ do the following:
 ```bash
 $ git clone https://github.com/karpathy/cryptos
 $ yek cryptos/ | clippy ask "Give me a high level overview of this project"
-Sending prompt to model 'gemini-2.0-flash-thinking-exp-01-21'...
+Sending prompt to model 'gemini-2.0-flash'...
 
 AI Response:
 

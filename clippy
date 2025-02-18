@@ -35,10 +35,23 @@ def set_model(args):
 
     model_name, api_key = model_api_key
     config = load_config()
-    config['model_name'] = model_name # Store just the OpenAI model name, e.g., "gpt-4o" or "gpt-3.5-turbo"
-    config['api_key'] = api_key
+   # Initialize models dict if it doesn't exist
+    if 'models' not in config:
+        config['models'] = {}
+    
+    # Store the model configuration
+    config['models'][model_name] = {
+        'api_key': api_key
+    }
+    
+    # Set as default if requested or if it's the only model
+    if args.default or len(config['models']) == 1:
+        config['default_model'] = model_name
+        print(f"Model '{model_name}' set as default.")
+    
     save_config(config)
-    print(f"Model set to '{model_name}' and API key saved.")
+    print(f"Model '{model_name}' configured successfully.")
+
 
 def get_base_url(model_name):
     """
@@ -115,8 +128,22 @@ Your goal is to be a helpful and efficient assistant that provides clear, concis
 def ask(args):
     """Asks a question to the AI model."""
     config = load_config()
-    model_name = config.get('model_name')
-    api_key = config.get('api_key') # API key is loaded and used to set openai.api_key
+    
+    if 'models' not in config or not config['models']:
+        print("Error: No models configured. Please use 'clippy set_model <model_name>:<api_key>' first.")
+        return
+    
+    # Use specified model or default model
+    model_name = args.model or config.get('default_model')
+    if not model_name:
+        print("Error: No model specified and no default model set. Please specify a model with --model or set a default.")
+        return
+    
+    if model_name not in config['models']:
+        print(f"Error: Model '{model_name}' not found in configuration. Available models: {', '.join(config['models'].keys())}")
+        return
+    
+    api_key = config['models'][model_name]['api_key']
 
     if not model_name or not api_key: # API key is now required
         print("Error: Model and API key not set. Please use 'clippy set_model <model_name>:<api_key>' first.")
@@ -142,20 +169,66 @@ def ask(args):
         print("\nAI Response:\n")
         print(ai_response.strip()) # Remove leading/trailing whitespace for cleaner output
 
+def list_models(args):
+    """Lists all configured models and indicates the default model."""
+    config = load_config()
+    
+    if 'models' not in config or not config['models']:
+        print("No models configured. Use 'clippy set_model <model_name>:<api_key>' to add a model.")
+        return
+    
+    default_model = config.get('default_model')
+    print("\nConfigured Models:")
+    for model_name in config['models']:
+        prefix = "* " if model_name == default_model else "  "
+        print(f"{prefix}{model_name}")
+    
+    if default_model:
+        print("\n* indicates default model")
+
+def change_default(args):
+    """Changes the default model to another existing model."""
+    config = load_config()
+    
+    if 'models' not in config or not config['models']:
+        print("No models configured. Use 'clippy set_model <model_name>:<api_key>' first.")
+        return
+    
+    model_name = args.model
+    if model_name not in config['models']:
+        print(f"Error: Model '{model_name}' not found in configuration.")
+        print(f"Available models: {', '.join(config['models'].keys())}")
+        return
+    
+    config['default_model'] = model_name
+    save_config(config)
+    print(f"Default model changed to '{model_name}'.")
+
 
 def main():
-    parser = argparse.ArgumentParser(description="Clippy: Your AI Command-Line Assistant (OpenAI, Google, Anthropic)") # Updated description
+    parser = argparse.ArgumentParser(description="Clippy: Your AI Command-Line Assistant (OpenAI, Google, Anthropic)")
     subparsers = parser.add_subparsers(title='commands', dest='command')
 
     # set_model command
-    set_model_parser = subparsers.add_parser('set_model', help='Set the AI model and API key (e.g., gpt-4o:your_openai_api_key or gemini-pro:your_google_api_key)') # Updated help text
+    set_model_parser = subparsers.add_parser('set_model', help='Set an AI model and API key')
     set_model_parser.add_argument('model_api', help='Model name and API key in the format <model_name>:<api_key>')
+    set_model_parser.add_argument('--default', '-d', action='store_true', help='Set this model as the default')
     set_model_parser.set_defaults(func=set_model)
 
     # ask command
-    ask_parser = subparsers.add_parser('ask', help='Ask a question to the AI model. You can pipe input from stdin.') # Updated help text
-    ask_parser.add_argument('prompt', nargs='+', help='The prompt to ask the AI. Use quotes for multi-word prompts. You can also pipe data via stdin.')
+    ask_parser = subparsers.add_parser('ask', help='Ask a question to the AI model')
+    ask_parser.add_argument('prompt', nargs='+', help='The prompt to ask the AI')
+    ask_parser.add_argument('--model', '-m', help='Specify which model to use (defaults to configured default model)')
     ask_parser.set_defaults(func=ask)
+
+    # list_models command
+    list_models_parser = subparsers.add_parser('list_models', help='List all configured models')
+    list_models_parser.set_defaults(func=list_models)
+
+    # change default model command
+    change_default_parser = subparsers.add_parser('set_default', help='Change the default model')
+    change_default_parser.add_argument('model', help='Name of the model to set as default')
+    change_default_parser.set_defaults(func=change_default)
 
     args = parser.parse_args()
 
