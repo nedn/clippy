@@ -23,11 +23,7 @@
 ### Installation
 
 1.  **Download the `clippy` script:** Save the provided Python script as `clippy` (or any name you prefer).
-2.  **Make it executable:**  Give the script execute permissions:
-    ```bash
-    chmod +x clippy
-    ```
-3.  **Move to your PATH (Optional):** For easier access from anywhere in your terminal, you can move the `clippy` script to a directory in your system's PATH, such as `/usr/local/bin/` or `~/bin/`.
+2.  **Move to your PATH (Optional):** For easier access from anywhere in your terminal, you can move the `clippy` script to a directory in your system's PATH, such as `/usr/local/bin/` or `~/bin/`.
     ```bash
     # Example for /usr/local/bin (may require sudo)
     sudo mv clippy /usr/local/bin/
