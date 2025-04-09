@@ -8,7 +8,6 @@ import platform
 import textwrap
 import subprocess
 from typing import Dict, List, Any, Optional, Tuple, Callable
-
 # --- Dependency Check ---
 try:
     import requests
@@ -657,55 +656,76 @@ def remove_model_cmd(args: argparse.Namespace, config: Dict[str, Any]) -> bool:
 def main() -> None:
     """Parses arguments and executes the corresponding command."""
     parser = argparse.ArgumentParser(
-        description="Clippy: Your AI Command-Line Assistant (Supports OpenAI, Google, Anthropic compatible APIs)",
+        description=f"{color_text('Clippy:', BOLD)} Your AI Command-Line Assistant.",
         formatter_class=argparse.RawTextHelpFormatter,
-        epilog=f"Configuration stored in: {CONFIG_FILE}"
+        epilog=f"Config: {CONFIG_FILE} | Repo: {CLIPPY_REPO_URL}",
+        add_help=False # Disable default help to handle it manually if needed for default command
     )
+    # Add explicit help option that works globally
+    parser.add_argument(
+        '-h', '--help', action='help', default=argparse.SUPPRESS,
+        help='Show this help message and exit.'
+    )
+
     subparsers = parser.add_subparsers(
         title='Commands',
         dest='command',
-        required=True,
-        help="Available actions"
+        # required=True, # Keep required=True initially for structure
+        # We handle the default 'ask' command logic before parsing fully.
+        # This means if no known command is found, we insert 'ask'.
+        # If 'ask' is inserted, 'command' will be populated.
+        # If only 'clippy' or 'clippy -h' is called, this logic is skipped or help is shown.
+        help="Action to perform (if omitted, defaults to 'ask')",
+        metavar="<command>" # Improve help display
     )
 
     # --- set_model command ---
     set_model_parser = subparsers.add_parser(
         'set_model',
-        help='Configure a new or existing AI model',
-        description='Adds or updates a model configuration using the format <model_name>:<api_key>. The provider type (openai, google, anthropic) is inferred from the model name prefix (e.g., "gpt-", "gemini-", "claude-").'
+        help='Configure an AI model: <model_name>:<api_key> or <provider>:<model>:<key>',
+        description='Adds/updates model config. Provider (openai, google, anthropic) is inferred from model prefix (gpt-, gemini-, claude-) unless specified explicitly.',
+        formatter_class=argparse.RawTextHelpFormatter # Allow newlines in description
     )
     set_model_parser.add_argument(
         'model_api',
-        help='Model name and API key string, e.g., "gpt-4o:sk-..."'
+        metavar='MODEL_CONFIG',
+        help='Model string: e.g., "gpt-4o:sk-..." or "anthropic:claude-3-opus-20240229:sk-ant-..."'
     )
     set_model_parser.add_argument(
         '--default', '-d',
         action='store_true',
-        help='Set this model as the default for the "ask" command.'
+        help='Set this model as the default for `ask`.'
     )
     set_model_parser.set_defaults(func=set_model_cmd)
 
     # --- ask command ---
+    # Make help text clearer that it's the default
     ask_parser = subparsers.add_parser(
         'ask',
-        help='Ask the configured AI a question (reads prompt from args and stdin)',
-        description='Sends a prompt to the selected AI model. Reads prompt text from command-line arguments, and if stdin is not a TTY, appends text piped to it.'
+        help='[Default] Ask the AI (reads prompt from args and stdin)',
+        description='Sends prompt to the selected AI. Reads args first, then appends stdin if piped.',
+        aliases=['a'], # Add short alias
+        formatter_class=argparse.RawTextHelpFormatter
     )
     ask_parser.add_argument(
         'prompt',
-        nargs='*', # 0 or more arguments
-        help='The prompt text. If empty and stdin is used, stdin becomes the prompt.'
+        nargs='*', # 0 or more arguments for the prompt text
+        metavar='PROMPT_TEXT',
+        help='Text prompt for the AI. Reads from arguments and/or stdin pipe.'
     )
     ask_parser.add_argument(
         '--model', '-m',
-        help='Specify the model name to use (overrides the default model).'
+        metavar='MODEL_NAME',
+        help='Specify model to use (overrides default).'
     )
+    # Example of adding more options to ask:
+    # ask_parser.add_argument('--temp', type=float, default=0.7, help='Set query temperature (e.g., 0.5)')
     ask_parser.set_defaults(func=ask_cmd)
 
     # --- list command ---
     list_models_parser = subparsers.add_parser(
         'list',
-        help='List all configured models and the default',
+        help='List configured models and the default',
         aliases=['ls'] # Add common alias
     )
     list_models_parser.set_defaults(func=list_models_cmd)
@@ -713,10 +733,12 @@ def main() -> None:
     # --- set_default command ---
     set_default_parser = subparsers.add_parser(
         'set_default',
-        help='Set the default model to use for the "ask" command'
+        help='Set the default model for `ask`',
+        aliases=['default']
     )
     set_default_parser.add_argument(
         'model',
+        metavar='MODEL_NAME',
         help='Name of the configured model to set as default.'
     )
     set_default_parser.set_defaults(func=set_default_cmd)
@@ -726,35 +748,91 @@ def main() -> None:
         'remove_model',
         help='Remove a configured model',
         aliases=['rm'], # Add common alias
-        description='Removes the specified model configuration. If the removed model was the default, the default will be unset.'
+        description='Removes the specified model config. Unsets default if needed.'
     )
     remove_model_parser.add_argument(
         'model',
+        metavar='MODEL_NAME',
         help='Name of the configured model to remove.'
     )
     remove_model_parser.set_defaults(func=remove_model_cmd)
 
-    # --- Check for updates ---
-    # Run this before parsing args, so it appears early
+    # --- Default Command Logic ---
+    # Get all defined command names and aliases *before* parsing
+    command_names_and_aliases = set()
+    for name, choice_parser in subparsers.choices.items():
+        command_names_and_aliases.add(name)
+        if hasattr(choice_parser, 'aliases'):
+            command_names_and_aliases.update(choice_parser.aliases)
+
+    # Check sys.argv BEFORE parsing to see if a known command was provided
+    args_to_parse = sys.argv[1:] # Arguments excluding the script name
+    needs_ask_inserted = False
+
+    if not args_to_parse:
+        # No arguments given, `clippy` alone -> show help and exit
+        parser.print_help()
+        sys.exit(0)
+    else:
+        first_arg = args_to_parse[0]
+        # If the first argument is NOT a known command AND NOT a help flag
+        if first_arg not in command_names_and_aliases and first_arg not in ('-h', '--help'):
+             # Assume it's a prompt for the 'ask' command
+             needs_ask_inserted = True
+
+    # If we determined it's a default command usage, modify args list for the parser
+    if needs_ask_inserted:
+        # Insert 'ask' command name at the beginning of the args list
+        args_to_parse.insert(0, 'ask')
+        # Now args_to_parse might be ['ask', 'my', 'prompt', 'here']
+        # or ['ask', '-m', 'model_name', 'my', 'prompt']
+
+    # Make subparsers required *after* potential insertion, so 'ask' satisfies it
+    # Or, more simply, just leave required=True in the definition and the insertion handles it.
+    # If `needs_ask_inserted` is False, the user provided a command, satisfying required=True.
+    # If `needs_ask_inserted` is True, we inserted `ask`, satisfying required=True.
+    # If no args were given, we exited above.
+    # If only '-h' was given, argparse handles it via the global help action.
+
+    # --- Check for updates (Run after arg check, before execution) ---
     try:
-        check_for_updates()
+        # Only check updates if not explicitly asking for help
+        if '-h' not in args_to_parse and '--help' not in args_to_parse:
+            check_for_updates()
     except Exception as e:
         # Don't let the update check crash the main script
         warn_print(f"Update check failed with unexpected error: {e}")
 
-
     # --- Parse arguments ---
-    args = parser.parse_args()
+    # We pass the potentially modified list `args_to_parse`
+    try:
+        args = parser.parse_args(args_to_parse)
+    except SystemExit as e:
+         # Catch SystemExit raised by argparse on error (like missing required arg for a command)
+         # Exit code is usually 2 for argparse errors
+         sys.exit(e.code) # Propagate the exit code
 
     # --- Load config ---
     config = load_config()
 
     # --- Execute command ---
-    # Pass config to command functions that need it
-    success = args.func(args, config) # All command functions now accept config
-
-    # --- Exit status ---
-    sys.exit(0 if success else 1)
+    if hasattr(args, 'func'):
+         # Call the function associated with the parsed command
+         try:
+             success = args.func(args, config) # Pass config to command functions
+             sys.exit(0 if success else 1) # Exit with 0 on success, 1 on handled failure
+         except Exception as e:
+             # Catch unexpected errors within command functions
+             error_print(f"An unexpected error occurred during command execution: {e}")
+             # import traceback # Optional: print traceback for debugging
+             # traceback.print_exc(file=sys.stderr)
+             sys.exit(2) # Use a different exit code for unexpected errors
+    else:
+        # This case should ideally not be reached if setup is correct
+        # (either a command is found/inserted, or help is shown/exited)
+        error_print("No command specified or recognized.")
+        parser.print_help()
+        sys.exit(1)
 
 
 if __name__ == "__main__":
