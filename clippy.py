@@ -725,7 +725,7 @@ def main() -> None:
     set_model_parser = subparsers.add_parser('set_model', help='Configure an AI model (<model_name>:<api_key>)', description='Adds/updates model: API key. Provider type inferred from name.')
     set_model_parser.add_argument(
         'model_api',
-        help='Model name and API key string, e.g.:"gpt-4o:sk-...", "gemini-2.5-pro-preview-06-05:A92f..."')
+        help='Model name and API key string, e.g.:"gpt-4o:sk-...", "gemini-2.5-pro:A92f..."')
     set_model_parser.add_argument('--default', '-d', action='store_true', help='Set this model as default.')
     set_model_parser.set_defaults(func=set_model_cmd)
 
