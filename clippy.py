@@ -443,7 +443,10 @@ def _assemble_prompt(prompt_args: List[str]) -> str:
 
 def ask_cmd(args: argparse.Namespace, config: Dict[str, Any]) -> bool:
     if not config['models']:
-        error_print("No models configured. Use 'clippy set_model <model_name>:<api_key>' first.")
+        error_print(
+            "No models configured. Run `clippy set_model"
+            "<model_name>:<api_key>` first, e.g: "
+            "clippy set_model gemini-2.5-pro:<api_key>")
         return False
     model_name = args.model or config.get('default_model')
     if not model_name:
