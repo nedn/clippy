@@ -4,3 +4,5 @@ __pycache__/
 *$py.class
 venv/
 
+benchmark_data/*
+openevolve_output/*
