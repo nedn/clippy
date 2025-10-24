@@ -1,0 +1,58 @@
+# Configuration for pack.py speed optimization
+max_iterations: 40
+checkpoint_interval: 5
+
+log_level: "INFO"
+file_suffix: ".py"
+
+# LLM configuration
+llm:
+  # Using placeholder models from your example
+  primary_model: "gemini-2.5-pro"
+  primary_model_weight: 0.8
+  secondary_model: "gemini-2.5-flash"
+  secondary_model_weight: 0.2
+  api_base: "https://generativelanguage.googleapis.com/v1beta/openai/"
+  temperature: 0.7
+  max_tokens: 16000
+  timeout: 120
+
+# Prompt configuration
+prompt:
+  system_message: |
+    You are an expert Python programmer specializing in high-performance code and system optimization.
+    Your task is to optimize the provided `pack.py` script to make it run as fast as possible.
+    The script's purpose is to scan a large directory (benchmark_data/v8/), filter for text files, and concatenate them into a single output.
+
+    The correctness of the output is paramount. The final output *must* be 100% identical to a golden file. Any change that alters the output (including file order, content, or formatting) will result in a score of 0.
+
+    Focus on improving performance. Potential bottlenecks include:
+    - File I/O operations (reading, writing).
+    - Parallel processing efficiency (ThreadPoolExecutor).
+    - File scanning and filtering logic (`rglob`, `should_ignore`).
+    - The `is_likely_non_text` function, which is called many times.
+    - String concatenation or an inefficient output writing loop.
+
+    You must only modify the code within the `EVOLVE-BLOCK-START` and `EVOLVE-BLOCK-END` markers.
+
+# Database configuration
+database:
+  population_size: 50
+  archive_size: 20
+  num_islands: 3
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.7
+  embedding_model: "text-embedding-3-small"
+  similarity_threshold: 0.99
+
+# Evaluator configuration
+evaluator:
+  timeout: 90 # 90-second timeout for the *entire* evaluation (run + diff)
+  # Set threshold to 0.0. Since correctness is binary (1 or 0),
+  # any non-failing (non-zero) score will pass.
+  cascade_thresholds: [0.0]
+  parallel_evaluations: 3 # Number of candidates to test in parallel
+
+# Evolution settings
+diff_based_evolution: true
+max_code_length: 20000
