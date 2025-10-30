@@ -1,12 +1,72 @@
 #!/usr/bin/env python3
 """
-This script recursively combines the content of text files in a directory.
-It uses a thread pool to read files in parallel, which can significantly speed up
-the process for large directories.
+This script, `pack`, is a command-line utility designed to recursively find and
+concatenate the contents of text files from specified directories or files into
+a single output. It's optimized for speed by reading files in parallel using a
+thread pool.
 
-The script supports optional file glob patterns to filter which files are processed.
+The main purpose of this tool is to "pack" a project's source code into a
+single text file, which can then be easily used as context for Large Language
+Models (LLMs). By default, it intelligently filters out binary files, hidden
+files (like .git), and overly large files to keep the output clean and relevant.
 
-The output is written to a file by default, but can be piped to stdout.
+How to Run:
+
+The script is executed from the command line. You can specify one or more paths
+to files or directories. If no path is provided, it defaults to the current
+directory.
+
+Basic Usage:
+- Pack the current directory:
+  $ pack
+
+- Pack a specific directory:
+  $ pack ./my_project
+
+- Pack multiple directories and files:
+  $ pack ./src ./docs/README.md
+
+- Pipe the output to another command (e.g., clipboard):
+  $ pack | pbcopy
+
+Filtering and Options:
+The script provides several flags to customize its behavior:
+
+- `-i` or `--include`:
+  Specifies a glob pattern to include only certain files.
+  Example: To pack only Python files:
+  $ pack -i "*.py"
+
+- `-e` or `--exclude`:
+  Specifies a glob pattern to exclude certain files or directories.
+  Example: To exclude all test files:
+  $ pack -e "*_test.py"
+
+- `--max-file-size`:
+  Sets a limit on the size of files to include. This is useful for excluding
+  large data files or logs. Sizes can be specified in human-readable formats.
+  Example: To include files up to 1MB:
+  $ pack --max-file-size 1M
+
+- `--paths-only`:
+  This flag will output only the list of file paths that would be included,
+  without their content. This is useful for previewing what will be packed.
+  Example:
+  $ pack --paths-only
+
+- `--output-tokens-size-only`:
+  This flag will output the token count and byte size for each file instead of
+  its content. This is useful for estimating the size of the final packed
+  content to ensure it fits within a model's context window. Requires the
+  `tiktoken` library to be installed (`pip install tiktoken`).
+  Example:
+  $ pack --output-tokens-size-only
+
+Output Behavior:
+- If the output is a terminal (TTY), the script will write to a file named
+  `output.txt` in the current directory.
+- If the output is piped or redirected, the script will write directly to
+  `stdout`. This allows for seamless integration with other command-line tools.
 """
 
 import argparse
@@ -416,21 +476,29 @@ def collect_results(input_paths_str: list[str], include_pattern: str,
 
     return results
 
-def write_output(output_target: TextIO, results: list[tuple[str, str]], using_stdout: bool) -> None:
+def write_output(output_target: TextIO, results: list[tuple[str, str]], using_stdout: bool, output_tokens_size_only: bool) -> None:
     """
     Write the results to the output target.
     """
     # --- Writing Output ---
-    total_tokens = 0
+    total_tokens_of_files = 0
+    total_tokens_of_output = 0
     try:
         file_count = 0
         total_files = len(results)
         for relative_path, content in results:
             file_info = f">>>> {relative_path}\n"
             output_target.write(file_info)
-            output_target.write(content)
+            file_content = file_info + content
+            file_content_tokens = count_tokens(file_content)
+            total_tokens_of_files += file_content_tokens
+            if output_tokens_size_only:
+                to_write = f"{file_content_tokens} tokens, {len(file_content)} bytes\n"
+            else:
+                to_write = file_content
+            output_target.write(to_write)
             output_target.write('\n')
-            total_tokens += count_tokens(file_info) + count_tokens(content)
+            total_tokens_of_output += count_tokens(to_write)
             output_target.flush() # Flush periodically for long outputs
             file_count += 1
             # Show progress as percentage
@@ -447,10 +515,11 @@ def write_output(output_target: TextIO, results: list[tuple[str, str]], using_st
         if output_target and not using_stdout:
             output_target.close()
         print("\n", end="", file=sys.stderr)  # Newline after progress indicator
+        if output_tokens_size_only:
+            output_target.write(f"Total tokens of all files: {total_tokens_of_files:,}\n")
 
     print(f"\nSuccessfully combined content of {file_count} files.", file=sys.stderr)
-    if total_tokens > 0:
-        print(f"Total tokens (approximate): {total_tokens:,}", file=sys.stderr)
+    print(f"Total tokens (approximate): {total_tokens_of_output:,}", file=sys.stderr)
 
 # --- Main Logic ---
 
@@ -495,6 +564,13 @@ def main():
         default=f"{DEFAULT_max_file_size_bytes}", # Use the constant
         help="Maximum size for individual files (e.g., '5M', '100K', '1G'). Files larger than this will be skipped."
     )
+    parser.add_argument(
+        "--output-tokens-size-only",
+        action="store_true",
+        help="Only output the total number of tokens per file and the total size of the output."
+        "This is useful for gauging the size of the output and come up with a strategy for "
+        "selective packing, such as using a smaller model or a smaller context window."
+    )
 
     args = parser.parse_args()
 
@@ -535,7 +611,7 @@ def main():
         exclude_pattern=exclude_pattern, max_file_size_bytes=max_file_size_bytes, 
         num_workers=num_workers, paths_only=paths_only, using_stdout=using_stdout)
 
-    write_output(output_target=output_target, results=results, using_stdout=using_stdout)
+    write_output(output_target=output_target, results=results, using_stdout=using_stdout, output_tokens_size_only=args.output_tokens_size_only)
 
 if __name__ == "__main__":
     main()
