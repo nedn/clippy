@@ -15,8 +15,9 @@ import os
 import logging
 from pathlib import Path
 import concurrent.futures
-import fnmatch  # For glob pattern matching on paths
-import re # For parsing human-readable sizes
+import fnmatch  
+import re 
+from typing import TextIO
 
 try:
     import tiktoken
@@ -313,74 +314,24 @@ def read_files_parallel(files_to_process: list[tuple[Path, Path]], num_workers: 
 
     return results
 
-# --- Main Logic ---
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Recursively combine content of text files from specified files and directories.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
-    parser.add_argument(
-        "paths",
-        nargs="*", # Accept zero or more arguments
-        default=["."], # Default to current directory if no paths are given
-        help="List of files and/or directories to process. If directories are provided, "
-             "they will be scanned recursively. Defaults to the current directory if none specified."
-    )
-    parser.add_argument(
-        "-i", "--include",
-        default="*",
-        help="Optional file glob pattern (e.g., '*.py', 'src/**/test_*.py'). "
-             "Filters files based on their relative path within the target directory."
-    )
-    parser.add_argument(
-        "-e", "--exclude",
-        default="",
-        help="Optional file glob pattern (e.g., '*.py', 'src/**/test_*.py'). "
-             "Filters files based on their relative path within the target directory."
-    )
-    parser.add_argument(
-        "-w", "--workers",
-        type=int,
-        default=MAX_WORKERS,
-        help="Number of parallel workers for reading files."
-    )
-    parser.add_argument(
-        "--paths-only",
-        action="store_true",
-        help="Only output file paths, without their content."
-    )
-    parser.add_argument(
-        "--max-file-size",
-        type=str, # Accept string input for parsing
-        default=f"{DEFAULT_max_file_size_bytes}", # Use the constant
-        help="Maximum size for individual files (e.g., '5M', '100K', '1G'). Files larger than this will be skipped."
-    )
-
-    args = parser.parse_args()
-
-    # Resolve input paths immediately
-    input_paths_str = args.paths
-    include_pattern = args.include
-    exclude_pattern = args.exclude
-    num_workers = args.workers
-    paths_only = args.paths_only # Get paths_only flag
-
-    try:
-        max_file_size_bytes = parse_size(args.max_file_size)
-    except ValueError as e:
-        print(f"Error: Invalid --max-file-size value: {e}", file=sys.stderr)
-        sys.exit(1)
-
+def collect_results(input_paths_str: list[str], include_pattern: str, 
+                    exclude_pattern: str, max_file_size_bytes: int, num_workers: int, 
+                    paths_only: bool, using_stdout: bool) -> list[tuple[str, str]]:
+    
     cwd = Path('.').resolve()
-    files_to_process_tuples: list[tuple[Path, Path]] = [] # (absolute_path, root_for_relative_path)
-    processed_files: set[Path] = set() # Keep track of files added
 
     print(f"Processing paths: {', '.join(input_paths_str)}", file=sys.stderr)
     print(f"Using include pattern: {include_pattern}", file=sys.stderr)
     print(f"Using exclude pattern: {exclude_pattern}", file=sys.stderr)
     print(f"Ignoring hidden files/directories (within scanned dirs) and binary files.", file=sys.stderr)
     print(f"Maximum file size: {max_file_size_bytes:,} bytes", file=sys.stderr)
+    print(f"Using {num_workers} workers", file=sys.stderr)
+    print(f"Current working directory: {cwd}", file=sys.stderr)
+
+    files_to_process_tuples: list[tuple[Path, Path]] = [] # (absolute_path, root_for_relative_path)
+    processed_files: set[Path] = set() # Keep track of files added
+
 
     for path_str in input_paths_str:
         p = Path(path_str).resolve()
@@ -455,8 +406,6 @@ def main():
     print(f"Processing {len(sorted_files_info)} files...", file=sys.stderr)
 
     # --- Parallel Reading (Needs updated function call) ---
-    # results = read_files_parallel(files_to_process, root_dir, num_workers, args.paths_only)
-    # Placeholder for the updated call:
     results = read_files_parallel(sorted_files_info, num_workers, paths_only)
     print("\nReading complete.", file=sys.stderr) # Newline after progress indicator
 
@@ -465,24 +414,12 @@ def main():
     # Let's ensure the sorting of the final results list remains
     results.sort(key=lambda item: item[0]) # Sort by relative_path_str returned by read_file_content
 
-    # --- Determine Output Destination ---
-    output_target = None
-    using_stdout = False
-    if sys.stdout.isatty():
-        # Output is to a terminal, write to default file
-        output_filename = DEFAULT_OUTPUT_FILENAME
-        print(f"Outputting to file: {os.path.abspath(output_filename)}", file=sys.stderr)
-        try:
-            output_target = open(output_filename, 'w', encoding='utf-8')
-        except OSError as e:
-            print(f"Error: Could not open output file {output_filename}: {e}", file=sys.stderr)
-            sys.exit(1)
-    else:
-        # Output is piped or redirected, write to stdout
-        print(f"Outputting to stdout", file=sys.stderr)
-        output_target = sys.stdout
-        using_stdout = True
+    return results
 
+def write_output(output_target: TextIO, results: list[tuple[str, str]], using_stdout: bool) -> None:
+    """
+    Write the results to the output target.
+    """
     # --- Writing Output ---
     total_tokens = 0
     try:
@@ -514,6 +451,91 @@ def main():
     print(f"\nSuccessfully combined content of {file_count} files.", file=sys.stderr)
     if total_tokens > 0:
         print(f"Total tokens (approximate): {total_tokens:,}", file=sys.stderr)
+
+# --- Main Logic ---
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Recursively combine content of text files from specified files and directories.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        "paths",
+        nargs="*", # Accept zero or more arguments
+        default=["."], # Default to current directory if no paths are given
+        help="List of files and/or directories to process. If directories are provided, "
+             "they will be scanned recursively. Defaults to the current directory if none specified."
+    )
+    parser.add_argument(
+        "-i", "--include",
+        default="*",
+        help="Optional file glob pattern (e.g., '*.py', 'src/**/test_*.py'). "
+             "Filters files based on their relative path within the target directory."
+    )
+    parser.add_argument(
+        "-e", "--exclude",
+        default="",
+        help="Optional file glob pattern (e.g., '*.py', 'src/**/test_*.py'). "
+             "Filters files based on their relative path within the target directory."
+    )
+    parser.add_argument(
+        "-w", "--workers",
+        type=int,
+        default=MAX_WORKERS,
+        help="Number of parallel workers for reading files."
+    )
+    parser.add_argument(
+        "--paths-only",
+        action="store_true",
+        help="Only output file paths, without their content."
+    )
+    parser.add_argument(
+        "--max-file-size",
+        type=str, # Accept string input for parsing
+        default=f"{DEFAULT_max_file_size_bytes}", # Use the constant
+        help="Maximum size for individual files (e.g., '5M', '100K', '1G'). Files larger than this will be skipped."
+    )
+
+    args = parser.parse_args()
+
+    # Resolve input paths immediately
+    input_paths_str = args.paths
+    include_pattern = args.include
+    exclude_pattern = args.exclude
+    num_workers = args.workers
+    paths_only = args.paths_only # Get paths_only flag
+
+    try:
+        max_file_size_bytes = parse_size(args.max_file_size)
+    except ValueError as e:
+        print(f"Error: Invalid --max-file-size value: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+    # --- Determine Output Destination ---
+    output_target = None
+    using_stdout = False
+    if sys.stdout.isatty():
+        # Output is to a terminal, write to default file
+        output_filename = DEFAULT_OUTPUT_FILENAME
+        print(f"Outputting to file: {os.path.abspath(output_filename)}", file=sys.stderr)
+        try:
+            output_target = open(output_filename, 'w', encoding='utf-8')
+        except OSError as e:
+            print(f"Error: Could not open output file {output_filename}: {e}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        # Output is piped or redirected, write to stdout
+        print(f"Outputting to stdout", file=sys.stderr)
+        output_target = sys.stdout
+        using_stdout = True
+
+    results = collect_results(
+        input_paths_str=input_paths_str, include_pattern=include_pattern, 
+        exclude_pattern=exclude_pattern, max_file_size_bytes=max_file_size_bytes, 
+        num_workers=num_workers, paths_only=paths_only, using_stdout=using_stdout)
+
+    write_output(output_target=output_target, results=results, using_stdout=using_stdout)
 
 if __name__ == "__main__":
     main()
