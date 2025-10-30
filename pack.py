@@ -511,11 +511,11 @@ def write_output(output_target: TextIO, results: list[tuple[str, str]], using_st
          else:
              sys.exit(1)
     finally:
+        if output_tokens_size_only:
+            output_target.write(f"Total tokens of input files: {total_tokens_of_files:,}\n")
         if output_target and not using_stdout:
             output_target.close()
         print("\n", end="", file=sys.stderr)  # Newline after progress indicator
-        if output_tokens_size_only:
-            output_target.write(f"Total tokens of all files: {total_tokens_of_files:,}\n")
 
     print(f"\nSuccessfully combined content of {file_count} files.", file=sys.stderr)
     print(f"Total tokens (approximate): {total_tokens_of_output:,}", file=sys.stderr)
