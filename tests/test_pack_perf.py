@@ -21,7 +21,7 @@ def setup_performance_test_directory(base_dir, num_files, file_size_kb):
 
 def run_benchmark(description, command_args):
     """Runs the pack script with given args and measures time."""
-    pack_script_path = Path(__file__).parent / "pack.py"
+    pack_script_path = Path(__file__).parent.parent / "pack.py"
     command = [sys.executable, str(pack_script_path)] + command_args
     
     print(f"--- Running: {description} ---")

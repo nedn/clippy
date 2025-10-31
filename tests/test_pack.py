@@ -9,7 +9,8 @@ from pathlib import Path
 import shutil
 
 # Add the parent directory to the path so we can import pack
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+sys.path.insert(0, os.path.join(
+    os.path.abspath(os.path.dirname(__file__)), ".."))
 
 import pack
 
@@ -195,13 +196,13 @@ class TestE2EFunctional(unittest.TestCase):
         (self.project_dir / "image.png").touch()
 
         # Path to the script
-        self.pack_script_path = Path(__file__).parent / "pack.py"
+        self.pack_script_path = Path(__file__).parent.parent / "pack"
 
     def tearDown(self):
         self.tmpdir.cleanup()
 
     def run_pack(self, args, cwd):
-        command = [sys.executable, str(self.pack_script_path)] + args
+        command = [str(self.pack_script_path)] + args
         return subprocess.run(command, cwd=cwd, capture_output=True, text=True, check=False)
 
     def test_piped_output_to_stdout(self):
