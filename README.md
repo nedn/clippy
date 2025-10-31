@@ -133,7 +133,67 @@ The `pack` script:
 *   Skips files larger than a configurable size (`--max-file-size`, default 5MB).
 *   Outputs the combined content, prepending each file's content with `>>>> path/to/file.ext`.
 *   Can optionally output just the file paths (`--paths-only`).
-*   If `tiktoken` is installed, it will estimate the total token count.
+- `--output-tokens-size-only` or `-t`:
+  This flag will output the token count and byte size for each file instead of
+  its content. This is useful for estimating the size of the final packed
+  content to ensure it fits within a model's context window. Requires the
+  `tiktoken` library to be installed (`pip install tiktoken`).
+  Example:
+  $ pack --output-tokens-size-only
+
+### Selective Packing with `-t`
+
+When dealing with large codebases, it's often beneficial to selectively pack only the most relevant files to stay within the LLM's context window. The `-t` (or `--output-tokens-size-only`) flag helps you identify which files contribute most to the token count, allowing you to refine your `pack` command.
+
+**Workflow for Selective Packing:**
+
+1.  **Analyze Token Usage:** Run `pack` with the `-t` flag on your target directory to see the token and byte count for each file:
+
+    ```bash
+    $ pack -t .
+    ```
+
+    This will output a list like:
+
+    ```
+    >>>> path/to/file1.py
+    1500 tokens, 10KB
+    >>>> path/to/file2.js
+    800 tokens, 5KB
+    ...
+    Total tokens of input files: 2300
+    ```
+
+2.  **Identify Key Files:** Review the output to pinpoint files or directories that are most relevant to your task and those that consume a large number of tokens but are less critical.
+
+3.  **Refine `pack` Command:** Use the `-i` (include) and `-e` (exclude) flags to create a more focused `pack` command.
+
+    **Example:** If you're working on a Python feature and notice a large `data/` directory, you might do:
+
+    ```bash
+    $ pack -i "*.py" -e "data/" .
+    ```
+
+    Or, if you only need specific modules:
+
+    ```bash
+    $ pack src/my_module.py src/another_module.py
+    ```
+
+This iterative process helps you provide the LLM with the most pertinent context, improving response quality and efficiency.
+
+**Tip:** For an initial draft of a selective packing strategy, you can pipe the output of `pack -t` directly to `clippy` and ask the LLM to suggest include/exclude patterns based on the token counts and file paths.
+
+```bash
+git clone https://github.com/django/django.git
+(echo "Current working directory: $(pwd)"; pack --help && pack -t django/django/) > context.txt
+ clippy "Analyze the following text, which contains the help output for a 'pack' script and a list of project files with token counts. Your task is to generate a single pack.py command that includes Python files related to 'auth' but excludes localization files (e.g., .po) and large vendor javascript libraries. Only output the final command." < context.txt
+
+ AI Response:
+pack.py . -i 'contrib/auth/**/*.py' -e '**/*.po' -e '**/vendor/**/*.js'
+
+```
+
 
 **Example:**
 
