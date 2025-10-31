@@ -4,5 +4,7 @@ __pycache__/
 *$py.class
 venv/
 
+.vscode/
+
 benchmark_data/*
 openevolve_output/*
