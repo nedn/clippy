@@ -22,3 +22,5 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run tests
       run: python tests/test_pack.py
+    - name: Run slow e2e tests
+      run: python tests/test_pack_e2e_slow.py
