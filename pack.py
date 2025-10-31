@@ -637,8 +637,8 @@ def write_output(output_target: TextIO, results: list[tuple[str, str]],
             file_content_tokens = count_tokens(file_content)
             total_tokens_of_files += file_content_tokens
             if output_tokens_size_only:
-                to_write = file_info + \
-                    f"\n{file_content_tokens} tokens, {len(file_content)} bytes\n"
+                to_write = (file_info + 
+                    f"{file_content_tokens} tokens, {len(file_content)} bytes\n")
             else:
                 to_write = file_content
             output_target.write(to_write)

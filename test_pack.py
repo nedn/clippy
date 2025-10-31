@@ -204,12 +204,6 @@ class TestE2EFunctional(unittest.TestCase):
         command = [sys.executable, str(self.pack_script_path)] + args
         return subprocess.run(command, cwd=cwd, capture_output=True, text=True, check=False)
 
-    def test_basic_operation_to_file(self):
-        # This test needs to run in an environment where stdout is a TTY.
-        # We can't easily simulate that with subprocess, so we'll skip the file check
-        # and focus on stdout tests, which is the more common use case for automation.
-        pass
-
     def test_piped_output_to_stdout(self):
         # subprocess.run with capture_output=True makes stdout not a tty.
         result = self.run_pack([], cwd=self.project_dir)
@@ -270,13 +264,24 @@ test content
         result = self.run_pack(["--output-tokens-size-only"], cwd=self.project_dir)
         self.assertEqual(result.returncode, 0)
         content = result.stdout
-        self.assertIn(">>>> README.md", content)
-        self.assertIn("bytes", content)
-        # If tiktoken is installed, "tokens" will be in output. If not, it won't.
-        # The script handles this, so we just check for the general format.
-        self.assertNotIn("main content", content)
-        self.assertNotIn("readme content", content)
+        self.maxDiff = None
+        self.assertEqual(content, """>>>> README.md
+7 tokens, 29 bytes
 
+>>>> large_file.log
+37 tokens, 162 bytes
+
+>>>> src/main.py
+7 tokens, 29 bytes
+
+>>>> src/utils.py
+7 tokens, 31 bytes
+
+>>>> tests/test_main.py
+8 tokens, 36 bytes
+
+Total tokens of input files: 66
+""")
 
 if __name__ == '__main__':
     # Add a command-line flag to select test classes.
