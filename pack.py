@@ -409,8 +409,14 @@ def read_file_content(file_path: Path,
     Returns a tuple (relative_path_str, content) or None if reading fails.
     """
     try:
-        relative_path = file_path.relative_to(root_dir)
-        relative_path_str = str(relative_path)
+        try:
+            relative_path = file_path.relative_to(root_dir)
+            relative_path_str = str(relative_path)
+        except ValueError:
+            # Fallback for when file_path is not within root_dir,
+            # which can happen for explicitly passed files outside CWD.
+            relative_path_str = str(file_path)
+
         with file_path.open('r', encoding='utf-8', errors='ignore') as f:
             content = f.read()
         return (relative_path_str, content)
