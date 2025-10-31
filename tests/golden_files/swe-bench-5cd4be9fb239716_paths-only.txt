@@ -1,0 +1,1308 @@
+>>>> CHANGELOG.md
+
+>>>> LICENSE
+
+>>>> README.md
+
+>>>> codecov.yml
+
+>>>> docs/README.md
+
+>>>> docs/api/harness.md
+
+>>>> docs/api/inference.md
+
+>>>> docs/api/versioning.md
+
+>>>> docs/assets/build_deploy.sh
+
+>>>> docs/assets/collection.md
+
+>>>> docs/assets/evaluation.md
+
+>>>> docs/assets/figures/swellama_banner.svg
+
+>>>> docs/assets/figures/swellama_banner_nobg.svg
+
+>>>> docs/assets/icons/mini-swe-agent-banner.svg
+
+>>>> docs/assets/icons/sb-cli-button.svg
+
+>>>> docs/assets/icons/swe-agent-button.svg
+
+>>>> docs/assets/icons/swe-rex-button.svg
+
+>>>> docs/assets/icons/swe-smith-button.svg
+
+>>>> docs/assets/mini_logo.svg
+
+>>>> docs/assets/mini_logo_text_below.svg
+
+>>>> docs/assets/sbcli_logo_text_below.svg
+
+>>>> docs/assets/sweagent_logo_text_below.svg
+
+>>>> docs/assets/swebench_logo_text_below.svg
+
+>>>> docs/assets/swellama.svg
+
+>>>> docs/assets/swerex_logo_text_below.svg
+
+>>>> docs/assets/swesmith_logo_text_below.svg
+
+>>>> docs/blog/index.md
+
+>>>> docs/blog/posts/250808-gpt5.md
+
+>>>> docs/blog/posts/250808-gpt5/default.py
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_bar.svg
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_cost.svg
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_cost_cut.svg
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_steps.svg
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_steps_cut.svg
+
+>>>> docs/blog/posts/250808-gpt5/mini_control_flow.svg
+
+>>>> docs/blog/posts/250808-gpt5/swebench.yaml
+
+>>>> docs/blog/posts/250820-mini-roulette.md
+
+>>>> docs/blog/posts/250820-mini-roulette/roulette_bar_v4.svg
+
+>>>> docs/blog/posts/250820-mini-roulette/roulette_cost.svg
+
+>>>> docs/blog/posts/250820-mini-roulette/roulette_steps.svg
+
+>>>> docs/css/custom.css
+
+>>>> docs/css/mkdocstrings.css
+
+>>>> docs/faq.md
+
+>>>> docs/guides/create_rag_datasets.md
+
+>>>> docs/guides/datasets.md
+
+>>>> docs/guides/docker_setup.md
+
+>>>> docs/guides/evaluation.md
+
+>>>> docs/guides/quickstart.md
+
+>>>> docs/index.md
+
+>>>> docs/installation.md
+
+>>>> docs/other_languages/README_CN.md
+
+>>>> docs/other_languages/README_JP.md
+
+>>>> docs/other_languages/README_TW.md
+
+>>>> docs/reference/harness.md
+
+>>>> docs/reference/inference.md
+
+>>>> docs/reference/versioning.md
+
+>>>> mkdocs.yml
+
+>>>> pyproject.toml
+
+>>>> swebench/__init__.py
+
+>>>> swebench/collect/README.md
+
+>>>> swebench/collect/__init__.py
+
+>>>> swebench/collect/build_dataset.py
+
+>>>> swebench/collect/build_dataset_ft.py
+
+>>>> swebench/collect/cleanup/delete_gh_workflows.py
+
+>>>> swebench/collect/cleanup/remove_envs.py
+
+>>>> swebench/collect/get_tasks_pipeline.py
+
+>>>> swebench/collect/get_top_pypi.py
+
+>>>> swebench/collect/make_lite/README.md
+
+>>>> swebench/collect/make_lite/criteria.py
+
+>>>> swebench/collect/make_lite/make_lite.py
+
+>>>> swebench/collect/make_repo/call_make_repo.py
+
+>>>> swebench/collect/make_repo/make_repo.sh
+
+>>>> swebench/collect/print_pulls.py
+
+>>>> swebench/collect/run_build_dataset_ft.sh
+
+>>>> swebench/collect/run_get_tasks_pipeline.sh
+
+>>>> swebench/collect/utils.py
+
+>>>> swebench/harness/__init__.py
+
+>>>> swebench/harness/constants/__init__.py
+
+>>>> swebench/harness/constants/c.py
+
+>>>> swebench/harness/constants/go.py
+
+>>>> swebench/harness/constants/java.py
+
+>>>> swebench/harness/constants/javascript.py
+
+>>>> swebench/harness/constants/php.py
+
+>>>> swebench/harness/constants/python.py
+
+>>>> swebench/harness/constants/ruby.py
+
+>>>> swebench/harness/constants/rust.py
+
+>>>> swebench/harness/docker_build.py
+
+>>>> swebench/harness/docker_utils.py
+
+>>>> swebench/harness/dockerfiles/__init__.py
+
+>>>> swebench/harness/dockerfiles/c.py
+
+>>>> swebench/harness/dockerfiles/go.py
+
+>>>> swebench/harness/dockerfiles/java.py
+
+>>>> swebench/harness/dockerfiles/javascript.py
+
+>>>> swebench/harness/dockerfiles/php.py
+
+>>>> swebench/harness/dockerfiles/python.py
+
+>>>> swebench/harness/dockerfiles/ruby.py
+
+>>>> swebench/harness/dockerfiles/rust.py
+
+>>>> swebench/harness/grading.py
+
+>>>> swebench/harness/log_parsers/__init__.py
+
+>>>> swebench/harness/log_parsers/c.py
+
+>>>> swebench/harness/log_parsers/go.py
+
+>>>> swebench/harness/log_parsers/java.py
+
+>>>> swebench/harness/log_parsers/javascript.py
+
+>>>> swebench/harness/log_parsers/php.py
+
+>>>> swebench/harness/log_parsers/python.py
+
+>>>> swebench/harness/log_parsers/ruby.py
+
+>>>> swebench/harness/log_parsers/rust.py
+
+>>>> swebench/harness/modal_eval/__init__.py
+
+>>>> swebench/harness/modal_eval/run_evaluation_modal.py
+
+>>>> swebench/harness/modal_eval/run_evaluation_modal_entrypoint.py
+
+>>>> swebench/harness/modal_eval/utils.py
+
+>>>> swebench/harness/prepare_images.py
+
+>>>> swebench/harness/remove_containers.py
+
+>>>> swebench/harness/reporting.py
+
+>>>> swebench/harness/run_evaluation.py
+
+>>>> swebench/harness/test_spec/__init__.py
+
+>>>> swebench/harness/test_spec/create_scripts.py
+
+>>>> swebench/harness/test_spec/javascript.py
+
+>>>> swebench/harness/test_spec/python.py
+
+>>>> swebench/harness/test_spec/test_spec.py
+
+>>>> swebench/harness/test_spec/utils.py
+
+>>>> swebench/harness/utils.py
+
+>>>> swebench/inference/__init__.py
+
+>>>> swebench/inference/codellama_device_maps.json
+
+>>>> swebench/inference/llamao/__init__.py
+
+>>>> swebench/inference/llamao/distributed_attention.py
+
+>>>> swebench/inference/llamao/modeling_flash_llama.py
+
+>>>> swebench/inference/make_datasets/__init__.py
+
+>>>> swebench/inference/make_datasets/bm25_retrieval.py
+
+>>>> swebench/inference/make_datasets/create_instance.py
+
+>>>> swebench/inference/make_datasets/create_text_dataset.py
+
+>>>> swebench/inference/make_datasets/eval_retrieval.py
+
+>>>> swebench/inference/make_datasets/tokenize_dataset.py
+
+>>>> swebench/inference/make_datasets/utils.py
+
+>>>> swebench/inference/run_api.py
+
+>>>> swebench/inference/run_live.py
+
+>>>> swebench/inference/run_llama.py
+
+>>>> swebench/resources/__init__.py
+
+>>>> swebench/resources/swebench-og/astropy__astropy/12907/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/13033/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/13236/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/13398/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/13453/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/13579/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/13977/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/14096/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/14182/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/14309/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/14365/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/14369/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/14508/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/14539/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/14598/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/14995/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/7166/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/7336/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/7606/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/7671/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/8707/environment.yml
+
+>>>> swebench/resources/swebench-og/astropy__astropy/8872/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/10097/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/10554/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/10880/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/10914/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/10973/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/10999/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11066/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11087/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11095/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11099/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11119/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11133/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11138/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11141/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11149/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11163/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11179/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11206/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11211/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11239/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11265/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11276/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11292/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11299/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11333/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11400/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11433/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11451/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11477/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11490/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11532/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11551/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11555/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11603/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11728/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11734/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11740/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11749/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11790/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11815/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11820/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11848/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11880/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11885/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11951/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11964/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/11999/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12039/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12050/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12125/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12143/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12155/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12193/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12209/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12262/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12273/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12276/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12304/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12308/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12325/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12406/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12419/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12663/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12708/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12713/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12741/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12754/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12774/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12858/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/12965/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13012/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13023/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13028/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13033/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13089/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13109/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13112/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13121/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13128/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13158/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13195/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13212/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13279/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13297/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13315/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13343/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13344/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13346/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13363/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13401/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13406/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13410/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13417/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13449/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13512/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13513/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13516/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13551/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13568/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13569/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13590/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13658/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13670/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13741/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13786/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13794/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13807/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13809/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13810/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13820/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13821/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13837/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13925/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13933/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/13964/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14007/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14011/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14017/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14034/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14053/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14089/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14122/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14140/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14155/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14170/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14238/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14311/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14315/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14349/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14351/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14373/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14376/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14404/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14434/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14493/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14500/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14534/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14539/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14559/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14580/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14608/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14631/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14672/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14725/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14752/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14765/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14771/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14787/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14792/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14855/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14915/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/14999/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15022/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15037/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15098/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15103/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15104/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15127/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15128/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15161/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15252/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15268/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15277/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15278/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15280/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15315/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15368/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15375/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15380/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15382/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15467/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15499/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15503/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15525/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15554/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15561/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15563/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15569/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15572/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15629/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15695/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15731/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15732/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15741/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15814/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15851/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15863/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15916/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15930/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15957/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15973/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/15987/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16032/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16082/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16100/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16116/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16136/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16139/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16145/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16255/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16256/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16263/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16315/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16333/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16429/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16454/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16485/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16493/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16502/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16527/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16560/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16569/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16595/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16612/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16631/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16642/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16661/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16662/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16667/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16801/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16819/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16877/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16899/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16901/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16938/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/16950/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/17029/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/17084/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/17087/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/7530/environment.yml
+
+>>>> swebench/resources/swebench-og/django__django/9296/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/13989/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/14623/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/20488/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/20676/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/20826/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/20859/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/21568/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/22719/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/22865/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/22871/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/23299/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/23314/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/23412/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/23476/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/24026/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/24149/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/24177/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/24570/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/24627/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/24637/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/24870/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/24970/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/25122/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/25287/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/25311/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/25332/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/25479/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/25775/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/25960/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/26113/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/26208/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/26291/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/26342/environment.yml
+
+>>>> swebench/resources/swebench-og/matplotlib__matplotlib/26466/environment.yml
+
+>>>> swebench/resources/swebench-og/mwaskom__seaborn/3069/environment.yml
+
+>>>> swebench/resources/swebench-og/mwaskom__seaborn/3187/environment.yml
+
+>>>> swebench/resources/swebench-og/pallets__flask/5014/environment.yml
+
+>>>> swebench/resources/swebench-og/psf__requests/1142/environment.yml
+
+>>>> swebench/resources/swebench-og/psf__requests/1724/environment.yml
+
+>>>> swebench/resources/swebench-og/psf__requests/1766/environment.yml
+
+>>>> swebench/resources/swebench-og/psf__requests/1921/environment.yml
+
+>>>> swebench/resources/swebench-og/psf__requests/2317/environment.yml
+
+>>>> swebench/resources/swebench-og/psf__requests/2931/environment.yml
+
+>>>> swebench/resources/swebench-og/psf__requests/5414/environment.yml
+
+>>>> swebench/resources/swebench-og/psf__requests/6028/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/2905/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/3095/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/3151/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/3305/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/3677/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/3993/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/4075/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/4094/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/4356/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/4629/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/4687/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/4695/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/4966/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/6461/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/6599/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/6721/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/6744/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/6938/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/6992/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/7229/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/7233/environment.yml
+
+>>>> swebench/resources/swebench-og/pydata__xarray/7393/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/4551/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/4604/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/4661/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/4970/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/6386/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/6528/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/6903/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/7080/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/7277/environment.yml
+
+>>>> swebench/resources/swebench-og/pylint-dev__pylint/8898/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/10051/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/10081/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/10356/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/5262/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/5631/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/5787/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/5809/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/5840/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/6197/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/6202/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/7205/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/7236/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/7324/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/7432/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/7490/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/7521/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/7571/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/7982/environment.yml
+
+>>>> swebench/resources/swebench-og/pytest-dev__pytest/8399/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/10297/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/10844/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/10908/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/11310/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/11578/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/12585/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/12682/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/12973/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/13124/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/13135/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/13142/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/13328/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/13439/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/13496/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/13779/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/14053/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/14087/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/14141/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/14496/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/14629/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/14710/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/14894/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/14983/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/15100/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/25102/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/25232/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/25747/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/25931/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/25973/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/26194/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/26323/environment.yml
+
+>>>> swebench/resources/swebench-og/scikit-learn__scikit-learn/9288/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/10323/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/10435/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/10449/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/10466/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/10614/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/10673/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/11445/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/11510/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/7440/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/7454/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/7462/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/7590/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/7748/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/7757/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/7889/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/7910/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/7985/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8035/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8056/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8120/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8265/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8269/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8459/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8475/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8548/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8551/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8593/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8595/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8621/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8638/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/8721/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9229/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9230/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9258/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9281/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9320/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9367/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9461/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9591/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9602/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9658/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9673/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9698/environment.yml
+
+>>>> swebench/resources/swebench-og/sphinx-doc__sphinx/9711/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/11618/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/12096/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/12419/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/12481/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/12489/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13031/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13091/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13372/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13480/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13551/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13615/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13647/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13757/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13798/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13852/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13877/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13878/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/13974/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/14248/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/14531/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/14711/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/14976/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/15017/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/15345/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/15349/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/15599/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/15809/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/15875/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/15976/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/16450/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/16597/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/16766/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/16792/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/16886/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/17139/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/17318/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/17630/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/17655/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/18189/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/18199/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/18211/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/18698/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/18763/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/19040/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/19346/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/19495/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/19637/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/19783/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/19954/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/20154/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/20428/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/20438/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/20590/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/20801/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/20916/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/21379/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/21596/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/21612/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/21847/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/21930/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/22080/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/22456/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/22714/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/22914/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/23262/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/23413/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/23534/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/23824/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/23950/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/24066/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/24213/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/24443/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/24539/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/24562/environment.yml
+
+>>>> swebench/resources/swebench-og/sympy__sympy/24661/environment.yml
+
+>>>> swebench/versioning/__init__.py
+
+>>>> swebench/versioning/constants.py
+
+>>>> swebench/versioning/extract_web/get_versions_astropy.py
+
+>>>> swebench/versioning/extract_web/get_versions_matplotlib.py
+
+>>>> swebench/versioning/extract_web/get_versions_pvlib-python.py
+
+>>>> swebench/versioning/extract_web/get_versions_pydicom.py
+
+>>>> swebench/versioning/extract_web/get_versions_sqlfluff.py
+
+>>>> swebench/versioning/extract_web/get_versions_xarray.py
+
+>>>> swebench/versioning/get_versions.py
+
+>>>> swebench/versioning/run_get_versions.sh
+
+>>>> swebench/versioning/utils.py
+
+>>>> tests/test_cli.py
+
+>>>> tests/test_collect_cli.py
+
+>>>> tests/test_data/pvlib.jsonl
+
+>>>> tests/test_evaluation.py
+
+>>>> tests/test_harness_utils.py
+

@@ -1,0 +1,457 @@
+>>>> CHANGELOG.md
+1978 tokens, 6953 bytes
+
+>>>> LICENSE
+256 tokens, 1172 bytes
+
+>>>> README.md
+3265 tokens, 11225 bytes
+
+>>>> docs/README.md
+343 tokens, 1696 bytes
+
+>>>> docs/api/harness.md
+57 tokens, 215 bytes
+
+>>>> docs/api/inference.md
+58 tokens, 221 bytes
+
+>>>> docs/api/versioning.md
+58 tokens, 224 bytes
+
+>>>> docs/assets/build_deploy.sh
+49 tokens, 197 bytes
+
+>>>> docs/assets/collection.md
+1498 tokens, 6660 bytes
+
+>>>> docs/assets/evaluation.md
+750 tokens, 2956 bytes
+
+>>>> docs/assets/figures/swellama_banner.svg
+27632 tokens, 50340 bytes
+
+>>>> docs/assets/figures/swellama_banner_nobg.svg
+27570 tokens, 50291 bytes
+
+>>>> docs/assets/icons/mini-swe-agent-banner.svg
+10398 tokens, 15950 bytes
+
+>>>> docs/assets/icons/sb-cli-button.svg
+27247 tokens, 49749 bytes
+
+>>>> docs/assets/icons/swe-agent-button.svg
+23001 tokens, 41057 bytes
+
+>>>> docs/assets/icons/swe-rex-button.svg
+21452 tokens, 38560 bytes
+
+>>>> docs/assets/icons/swe-smith-button.svg
+114031 tokens, 207221 bytes
+
+>>>> docs/assets/mini_logo.svg
+7051 tokens, 10793 bytes
+
+>>>> docs/assets/mini_logo_text_below.svg
+7651 tokens, 11801 bytes
+
+>>>> docs/assets/sbcli_logo_text_below.svg
+23188 tokens, 35777 bytes
+
+>>>> docs/assets/sweagent_logo_text_below.svg
+19366 tokens, 29754 bytes
+
+>>>> docs/assets/swebench_logo_text_below.svg
+23636 tokens, 36380 bytes
+
+>>>> docs/assets/swellama.svg
+22831 tokens, 44603 bytes
+
+>>>> docs/assets/swerex_logo_text_below.svg
+17139 tokens, 26686 bytes
+
+>>>> docs/assets/swesmith_logo_text_below.svg
+85757 tokens, 130994 bytes
+
+>>>> docs/blog/index.md
+9 tokens, 31 bytes
+
+>>>> docs/blog/posts/250808-gpt5.md
+1715 tokens, 6091 bytes
+
+>>>> docs/blog/posts/250808-gpt5/default.py
+1206 tokens, 5668 bytes
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_bar.svg
+21568 tokens, 46613 bytes
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_cost.svg
+72430 tokens, 167872 bytes
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_cost_cut.svg
+70035 tokens, 161317 bytes
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_steps.svg
+22371 tokens, 50005 bytes
+
+>>>> docs/blog/posts/250808-gpt5/gpt5_steps_cut.svg
+21643 tokens, 47639 bytes
+
+>>>> docs/blog/posts/250808-gpt5/mini_control_flow.svg
+15003 tokens, 26999 bytes
+
+>>>> docs/blog/posts/250808-gpt5/swebench.yaml
+1829 tokens, 7727 bytes
+
+>>>> docs/blog/posts/250820-mini-roulette.md
+1593 tokens, 6399 bytes
+
+>>>> docs/blog/posts/250820-mini-roulette/roulette_bar_v4.svg
+22709 tokens, 29259 bytes
+
+>>>> docs/blog/posts/250820-mini-roulette/roulette_cost.svg
+26468 tokens, 60257 bytes
+
+>>>> docs/blog/posts/250820-mini-roulette/roulette_steps.svg
+21179 tokens, 47266 bytes
+
+>>>> docs/css/custom.css
+240 tokens, 727 bytes
+
+>>>> docs/css/mkdocstrings.css
+214 tokens, 697 bytes
+
+>>>> docs/faq.md
+1009 tokens, 4732 bytes
+
+>>>> docs/guides/create_rag_datasets.md
+841 tokens, 3483 bytes
+
+>>>> docs/guides/datasets.md
+845 tokens, 3239 bytes
+
+>>>> docs/guides/docker_setup.md
+1180 tokens, 5473 bytes
+
+>>>> docs/guides/evaluation.md
+1187 tokens, 4909 bytes
+
+>>>> docs/guides/quickstart.md
+710 tokens, 2818 bytes
+
+>>>> docs/index.md
+1847 tokens, 5919 bytes
+
+>>>> docs/installation.md
+458 tokens, 2056 bytes
+
+>>>> docs/other_languages/README_CN.md
+2530 tokens, 5689 bytes
+
+>>>> docs/other_languages/README_JP.md
+2919 tokens, 6066 bytes
+
+>>>> docs/other_languages/README_TW.md
+2867 tokens, 5694 bytes
+
+>>>> docs/reference/harness.md
+1552 tokens, 6855 bytes
+
+>>>> docs/reference/inference.md
+1177 tokens, 4930 bytes
+
+>>>> docs/reference/versioning.md
+669 tokens, 3192 bytes
+
+>>>> pyproject.toml
+569 tokens, 1974 bytes
+
+>>>> swebench/__init__.py
+345 tokens, 1472 bytes
+
+>>>> swebench/collect/README.md
+1161 tokens, 4936 bytes
+
+>>>> swebench/collect/__init__.py
+11 tokens, 34 bytes
+
+>>>> swebench/collect/build_dataset.py
+1499 tokens, 6856 bytes
+
+>>>> swebench/collect/build_dataset_ft.py
+601 tokens, 2719 bytes
+
+>>>> swebench/collect/cleanup/delete_gh_workflows.py
+410 tokens, 1798 bytes
+
+>>>> swebench/collect/cleanup/remove_envs.py
+769 tokens, 3241 bytes
+
+>>>> swebench/collect/get_tasks_pipeline.py
+1271 tokens, 5574 bytes
+
+>>>> swebench/collect/get_top_pypi.py
+792 tokens, 3728 bytes
+
+>>>> swebench/collect/make_lite/README.md
+323 tokens, 1362 bytes
+
+>>>> swebench/collect/make_lite/criteria.py
+1289 tokens, 5201 bytes
+
+>>>> swebench/collect/make_lite/make_lite.py
+608 tokens, 2470 bytes
+
+>>>> swebench/collect/make_repo/call_make_repo.py
+121 tokens, 494 bytes
+
+>>>> swebench/collect/make_repo/make_repo.sh
+997 tokens, 3922 bytes
+
+>>>> swebench/collect/print_pulls.py
+1015 tokens, 4209 bytes
+
+>>>> swebench/collect/run_build_dataset_ft.sh
+70 tokens, 311 bytes
+
+>>>> swebench/collect/run_get_tasks_pipeline.sh
+115 tokens, 401 bytes
+
+>>>> swebench/collect/utils.py
+3171 tokens, 14361 bytes
+
+>>>> swebench/harness/__init__.py
+140 tokens, 544 bytes
+
+>>>> swebench/harness/constants/__init__.py
+1385 tokens, 4797 bytes
+
+>>>> swebench/harness/constants/c.py
+2269 tokens, 8196 bytes
+
+>>>> swebench/harness/constants/go.py
+2770 tokens, 9013 bytes
+
+>>>> swebench/harness/constants/java.py
+5526 tokens, 21598 bytes
+
+>>>> swebench/harness/constants/javascript.py
+5311 tokens, 19106 bytes
+
+>>>> swebench/harness/constants/php.py
+3422 tokens, 13575 bytes
+
+>>>> swebench/harness/constants/python.py
+15368 tokens, 45033 bytes
+
+>>>> swebench/harness/constants/ruby.py
+3567 tokens, 13290 bytes
+
+>>>> swebench/harness/constants/rust.py
+3385 tokens, 12890 bytes
+
+>>>> swebench/harness/docker_build.py
+4083 tokens, 19224 bytes
+
+>>>> swebench/harness/docker_utils.py
+2278 tokens, 10250 bytes
+
+>>>> swebench/harness/dockerfiles/__init__.py
+820 tokens, 3119 bytes
+
+>>>> swebench/harness/dockerfiles/c.py
+211 tokens, 744 bytes
+
+>>>> swebench/harness/dockerfiles/go.py
+611 tokens, 1894 bytes
+
+>>>> swebench/harness/dockerfiles/java.py
+286 tokens, 857 bytes
+
+>>>> swebench/harness/dockerfiles/javascript.py
+1552 tokens, 5269 bytes
+
+>>>> swebench/harness/dockerfiles/php.py
+247 tokens, 903 bytes
+
+>>>> swebench/harness/dockerfiles/python.py
+424 tokens, 1439 bytes
+
+>>>> swebench/harness/dockerfiles/ruby.py
+141 tokens, 494 bytes
+
+>>>> swebench/harness/dockerfiles/rust.py
+161 tokens, 579 bytes
+
+>>>> swebench/harness/grading.py
+2247 tokens, 9366 bytes
+
+>>>> swebench/harness/log_parsers/__init__.py
+243 tokens, 904 bytes
+
+>>>> swebench/harness/log_parsers/c.py
+1089 tokens, 4436 bytes
+
+>>>> swebench/harness/log_parsers/go.py
+333 tokens, 1310 bytes
+
+>>>> swebench/harness/log_parsers/java.py
+733 tokens, 2991 bytes
+
+>>>> swebench/harness/log_parsers/javascript.py
+3030 tokens, 12617 bytes
+
+>>>> swebench/harness/log_parsers/php.py
+385 tokens, 1503 bytes
+
+>>>> swebench/harness/log_parsers/python.py
+2585 tokens, 10813 bytes
+
+>>>> swebench/harness/log_parsers/ruby.py
+891 tokens, 3653 bytes
+
+>>>> swebench/harness/log_parsers/rust.py
+305 tokens, 1117 bytes
+
+>>>> swebench/harness/modal_eval/__init__.py
+61 tokens, 276 bytes
+
+>>>> swebench/harness/modal_eval/run_evaluation_modal.py
+3437 tokens, 16166 bytes
+
+>>>> swebench/harness/modal_eval/run_evaluation_modal_entrypoint.py
+822 tokens, 4267 bytes
+
+>>>> swebench/harness/modal_eval/utils.py
+115 tokens, 566 bytes
+
+>>>> swebench/harness/prepare_images.py
+1057 tokens, 4724 bytes
+
+>>>> swebench/harness/remove_containers.py
+328 tokens, 1634 bytes
+
+>>>> swebench/harness/reporting.py
+1207 tokens, 5823 bytes
+
+>>>> swebench/harness/run_evaluation.py
+4689 tokens, 21803 bytes
+
+>>>> swebench/harness/test_spec/__init__.py
+62 tokens, 237 bytes
+
+>>>> swebench/harness/test_spec/create_scripts.py
+420 tokens, 1767 bytes
+
+>>>> swebench/harness/test_spec/javascript.py
+864 tokens, 3630 bytes
+
+>>>> swebench/harness/test_spec/python.py
+3904 tokens, 16312 bytes
+
+>>>> swebench/harness/test_spec/test_spec.py
+1778 tokens, 7611 bytes
+
+>>>> swebench/harness/test_spec/utils.py
+754 tokens, 3137 bytes
+
+>>>> swebench/harness/utils.py
+2882 tokens, 12319 bytes
+
+>>>> swebench/inference/__init__.py
+11 tokens, 36 bytes
+
+>>>> swebench/inference/codellama_device_maps.json
+1895 tokens, 4594 bytes
+
+>>>> swebench/inference/llamao/__init__.py
+15 tokens, 43 bytes
+
+>>>> swebench/inference/llamao/distributed_attention.py
+635 tokens, 2681 bytes
+
+>>>> swebench/inference/llamao/modeling_flash_llama.py
+8563 tokens, 40283 bytes
+
+>>>> swebench/inference/make_datasets/__init__.py
+14 tokens, 50 bytes
+
+>>>> swebench/inference/make_datasets/bm25_retrieval.py
+3980 tokens, 18886 bytes
+
+>>>> swebench/inference/make_datasets/create_instance.py
+3575 tokens, 17076 bytes
+
+>>>> swebench/inference/make_datasets/create_text_dataset.py
+2358 tokens, 10946 bytes
+
+>>>> swebench/inference/make_datasets/eval_retrieval.py
+655 tokens, 2670 bytes
+
+>>>> swebench/inference/make_datasets/tokenize_dataset.py
+1705 tokens, 7912 bytes
+
+>>>> swebench/inference/make_datasets/utils.py
+2509 tokens, 10691 bytes
+
+>>>> swebench/inference/run_api.py
+4935 tokens, 19713 bytes
+
+>>>> swebench/inference/run_live.py
+2311 tokens, 10384 bytes
+
+>>>> swebench/inference/run_llama.py
+3762 tokens, 16457 bytes
+
+>>>> swebench/resources/__init__.py
+19 tokens, 70 bytes
+
+>>>> swebench/versioning/__init__.py
+11 tokens, 37 bytes
+
+>>>> swebench/versioning/constants.py
+706 tokens, 2259 bytes
+
+>>>> swebench/versioning/extract_web/get_versions_astropy.py
+594 tokens, 2274 bytes
+
+>>>> swebench/versioning/extract_web/get_versions_matplotlib.py
+468 tokens, 1753 bytes
+
+>>>> swebench/versioning/extract_web/get_versions_pvlib-python.py
+635 tokens, 2337 bytes
+
+>>>> swebench/versioning/extract_web/get_versions_pydicom.py
+383 tokens, 1443 bytes
+
+>>>> swebench/versioning/extract_web/get_versions_sqlfluff.py
+750 tokens, 2720 bytes
+
+>>>> swebench/versioning/extract_web/get_versions_xarray.py
+453 tokens, 1679 bytes
+
+>>>> swebench/versioning/get_versions.py
+3504 tokens, 15777 bytes
+
+>>>> swebench/versioning/run_get_versions.sh
+160 tokens, 692 bytes
+
+>>>> swebench/versioning/utils.py
+292 tokens, 1255 bytes
+
+>>>> tests/test_cli.py
+172 tokens, 719 bytes
+
+>>>> tests/test_collect_cli.py
+431 tokens, 1734 bytes
+
+>>>> tests/test_data/pvlib.jsonl
+5661 tokens, 17910 bytes
+
+>>>> tests/test_evaluation.py
+209 tokens, 878 bytes
+
+>>>> tests/test_harness_utils.py
+1851 tokens, 7281 bytes
+
+Total tokens of input files: 942,802
