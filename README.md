@@ -185,12 +185,12 @@ This iterative process helps you provide the LLM with the most pertinent context
 **Tip:** For an initial draft of a selective packing strategy, you can pipe the output of `pack -t` directly to `clippy` and ask the LLM to suggest include/exclude patterns based on the token counts and file paths.
 
 ```bash
-git clone https://github.com/django/django.git
-(echo "Current working directory: $(pwd)"; pack --help && pack -t django/django/) > context.txt
- clippy "Analyze the following text, which contains the help output for a 'pack' script and a list of project files with token counts. Your task is to generate a single pack.py command that includes Python files related to 'auth' but excludes localization files (e.g., .po) and large vendor javascript libraries. Only output the final command." < context.txt
+$ git clone https://github.com/django/django.git
+$ (echo "Current working directory: $(pwd)"; pack --help && pack -t django/django/) > context.txt
+$ clippy "Analyze the following text, which contains the help output for a 'pack' script and a list of project files with token counts. Your task is to generate a single pack.py command that includes Python files related to 'auth' but excludes localization files (e.g., .po) and large vendor javascript libraries. Only output the final command." < context.txt
 
- AI Response:
-pack.py . -i 'contrib/auth/**/*.py' -e '**/*.po' -e '**/vendor/**/*.js'
+AI Response:
+`pack.py . -i 'contrib/auth/**/*.py' -e '**/*.po' -e '**/vendor/**/*.js'`
 
 ```
 
