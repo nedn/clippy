@@ -8,3 +8,9 @@ venv/
 
 benchmark_data/*
 openevolve_output/*
+
+# python coverage report
+.coverage
+
+# Output of pack command itself
+output.txt
