@@ -291,7 +291,7 @@ def is_likely_non_text(file_path: Path) -> bool:
     and checks for the presence of null bytes (a common indicator of binary data).
 
     Returns True if the file is likely non-text, False otherwise.
-    Handles potential read errors gracefully.
+    Handles potential read errors (e.g., permission denied) gracefully.
     """
     # Check extension of file (case-insensitive)
     if file_path.suffix.lower() in NON_TEXT_EXTENSIONS_SET:
@@ -304,29 +304,10 @@ def is_likely_non_text(file_path: Path) -> bool:
             # Check if a null byte exists in the chunk read
             # Empty files are considered not binary by this check
             return b'\0' in chunk
-    except FileNotFoundError:
-        print(f"Warning: File not found {file_path}", file=sys.stderr)
-        return True  # Treat as non-text if it disappeared or never existed
-    except IsADirectoryError:
-        print(f"Warning: Path is a directory, not a file {file_path}",
-              file=sys.stderr)
-        return True  # Directories are not text files
     except PermissionError:
         print(f"Warning: Permission denied reading {file_path}",
               file=sys.stderr)
         return True  # Treat as non-text if we can't read it
-    except OSError as e:
-        # Catch other potential OS-level errors during open/read
-        print(
-            f"Warning: Could not read {file_path} to check for binary content: {e}",
-            file=sys.stderr)
-        return True  # Treat as non-text if we can't read it properly
-    except Exception as e:
-        # Catch any other unexpected errors
-        print(
-            f"Warning: Unexpected error checking binary status of {file_path}: {e}",
-            file=sys.stderr)
-        return True  # Default to treating as non-text on unexpected errors
 
 
 def should_ignore(file_path: Path, root_dir: Path, include_pattern: str,
@@ -435,8 +416,8 @@ def read_file_content(file_path: Path,
         return None
 
 
-def read_files_parallel(files_to_process: list[tuple[Path,
-                                                     Path]], num_workers: int,
+def read_files_parallel(files_to_process: list[tuple[Path, Path]], 
+                        num_workers: int,
                         paths_only: bool) -> list[tuple[str, str]]:
     """
     Read files in parallel using a thread pool.
@@ -637,8 +618,10 @@ def write_output(output_target: TextIO, results: list[tuple[str, str]],
             file_content_tokens = count_tokens(file_content)
             total_tokens_of_files += file_content_tokens
             if output_tokens_size_only:
-                to_write = (file_info +
-                    f"{file_content_tokens} tokens, {len(file_content)} bytes\n")
+                to_write = (
+                    file_info +
+                    f"{file_content_tokens} tokens, {len(file_content)} bytes\n"
+                )
             else:
                 to_write = file_content
             output_target.write(to_write)
@@ -694,8 +677,7 @@ def print_warning_about_large_output(total_tokens_of_output: int,
         f'(echo "Original directory where the command was run from: {os.getcwd()};" '
         f'echo "Original run command that resulted in large token output: {original_cmd}"; '
         f'echo "--- Help output ---"; {help_cmd}; '
-        f'echo "--- File token/size analysis ---"; {token_size_cmd})'
-        )
+        f'echo "--- File token/size analysis ---"; {token_size_cmd})')
 
     warning_message = f"""
 ================================================================================
@@ -741,6 +723,14 @@ def main(argv: list[str]):
         "they will be scanned recursively. Defaults to the current directory if none specified."
     )
     parser.add_argument(
+        "-o",
+        "--output-file",
+        type=str,
+        default=None,
+        help=
+        f"Output file to write the results to. Default is {DEFAULT_OUTPUT_FILENAME} or stdout if the command is piped or redirected."
+    )
+    parser.add_argument(
         "-i",
         "--include",
         default="*",
@@ -779,7 +769,7 @@ def main(argv: list[str]):
         "selective packing, such as using a smaller model or a smaller context window."
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv[1:])
 
     # Resolve input paths immediately
     input_paths_str = args.paths
@@ -797,39 +787,37 @@ def main(argv: list[str]):
     # --- Determine Output Destination ---
     output_target = None
     using_stdout = False
-    if sys.stdout.isatty():
+    if sys.stdout.isatty() or args.output_file is not None:
         # Output is to a terminal, write to default file
-        output_filename = DEFAULT_OUTPUT_FILENAME
-        print(f"Outputting to file: {os.path.abspath(output_filename)}",
-              file=sys.stderr)
-        try:
-            output_target = open(output_filename, 'w', encoding='utf-8')
-        except OSError as e:
-            print(f"Error: Could not open output file {output_filename}: {e}",
-                  file=sys.stderr)
-            sys.exit(1)
+        output_filename = args.output_file or DEFAULT_OUTPUT_FILENAME
+        print(f"Outputting to file: {output_filename}", file=sys.stderr)
+        output_target = open(output_filename, 'w', encoding='utf-8')
     else:
         # Output is piped or redirected, write to stdout
         print(f"Outputting to stdout", file=sys.stderr)
         output_target = sys.stdout
         using_stdout = True
 
-    results = collect_results(input_paths_str=input_paths_str,
-                              include_pattern=include_pattern,
-                              exclude_pattern=exclude_pattern,
-                              max_file_size_bytes=max_file_size_bytes,
-                              num_workers=num_workers,
-                              paths_only=paths_only,
-                              using_stdout=using_stdout)
+    try:
+        results = collect_results(input_paths_str=input_paths_str,
+                                  include_pattern=include_pattern,
+                                  exclude_pattern=exclude_pattern,
+                                  max_file_size_bytes=max_file_size_bytes,
+                                  num_workers=num_workers,
+                                  paths_only=paths_only,
+                                  using_stdout=using_stdout)
 
-    total_tokens_of_output = write_output(
-        output_target=output_target,
-        results=results,
-        using_stdout=using_stdout,
-        output_tokens_size_only=args.output_tokens_size_only)
-    if total_tokens_of_output > 800000 and args.output_tokens_size_only is False:
-        print_warning_about_large_output(
-            total_tokens_of_output=total_tokens_of_output, argv=argv)
+        total_tokens_of_output = write_output(
+            output_target=output_target,
+            results=results,
+            using_stdout=using_stdout,
+            output_tokens_size_only=args.output_tokens_size_only)
+        if total_tokens_of_output > 800000 and args.output_tokens_size_only is False:
+            print_warning_about_large_output(
+                total_tokens_of_output=total_tokens_of_output, argv=argv)
+    finally:
+        if output_target and not using_stdout:
+            output_target.close()
 
 
 if __name__ == "__main__":

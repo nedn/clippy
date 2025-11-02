@@ -1,9 +1,24 @@
 import os
 import shutil
 import subprocess
+import sys
+import io
 import tempfile
 import unittest
 from pathlib import Path
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import pack
+
+
+class NonTTYStringIO(io.StringIO):
+    """
+    A StringIO wrapper that implements isatty() to return False.
+    This ensures pack.main() treats stdout as non-TTY (piped) and writes to stdout.
+    """
+    def isatty(self):
+        return False
+
 
 class TestPackE2ESlow(unittest.TestCase):
     """
@@ -14,7 +29,6 @@ class TestPackE2ESlow(unittest.TestCase):
     commit_hash = "5cd4be9fb239716"
     temp_dir = None
     repo_path = None
-    pack_script_path = None
 
     @classmethod
     def setUpClass(cls):
@@ -24,27 +38,17 @@ class TestPackE2ESlow(unittest.TestCase):
         """
         cls.temp_dir = tempfile.TemporaryDirectory()
         cls.repo_path = os.path.join(cls.temp_dir.name, 'SWE-bench')
-        cls.pack_script_path = os.path.join(os.path.dirname(__file__), '..', 'pack.py')
 
         print(f"\nCloning {cls.repo_url} into {cls.repo_path}...")
-        try:
-            subprocess.run(
-                ['git', 'clone', cls.repo_url, cls.repo_path],
-                check=True, capture_output=True, text=True
-            )
-            print(f"Checking out commit {cls.commit_hash}...")
-            subprocess.run(
-                ['git', '-C', cls.repo_path, 'checkout', cls.commit_hash],
-                check=True, capture_output=True, text=True
-            )
-        except subprocess.CalledProcessError as e:
-            cls.tearDownClass()  # Ensure cleanup happens on failure
-            raise RuntimeError(f"Failed to set up test repository:\n"
-                               f"  Command: {' '.join(e.cmd)}\n"
-                               f"  Stderr: {e.stderr}")
-        except FileNotFoundError:
-            cls.tearDownClass()
-            raise RuntimeError("Git command not found. Please ensure git is installed and in your PATH.")
+        subprocess.run(
+            ['git', 'clone', cls.repo_url, cls.repo_path],
+            check=True, capture_output=True, text=True
+        )
+        print(f"Checking out commit {cls.commit_hash}...")
+        subprocess.run(
+            ['git', '-C', cls.repo_path, 'checkout', cls.commit_hash],
+            check=True, capture_output=True, text=True
+        )
 
     @classmethod
     def tearDownClass(cls):
@@ -55,33 +59,49 @@ class TestPackE2ESlow(unittest.TestCase):
             cls.temp_dir.cleanup()
             print("\nCleaned up temporary repository.")
 
+    def setUp(self):
+        """
+        Set up the test environment by creating a temporary output file.
+        """
+        self.test_output_file_path = str(os.path.join(self.temp_dir.name, "test_output.txt"))   
+    
+    def tearDown(self):
+        """
+        Clean up the temporary output file after each test.
+        """
+        Path(self.test_output_file_path).unlink(missing_ok=True)
+
     def _run_pack_and_assert_output(self, cli_args, golden_filename):
         """
         Helper method to run the pack script with given arguments and compare
         its output to a golden file.
         """
         golden_file_path = Path(__file__).parent / "golden_files" / golden_filename
-        self.assertTrue(golden_file_path.exists(), f"Golden file not found: {golden_file_path}")
+        Path(self.test_output_file_path).unlink(missing_ok=True)
 
-        command = [self.pack_script_path] + cli_args + [self.repo_path]
+        # Build argv list: ['pack.py'] + cli_args + [repo_path]
+        argv = ['pack.py'] + cli_args + ['-o', self.test_output_file_path] + [self.repo_path]
+        print(f"Running pack.main with argv: {argv}")
 
+        # Capture stdout by redirecting to StringIO
+        # pack.main checks sys.stdout.isatty() - we need to make it non-TTY
+        # so it writes to stdout instead of a file
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
         try:
-            print(f"Running command: {' '.join(command)}")
-            result = subprocess.run(
-                command,
-                capture_output=True, text=True, check=True
-            )
-            actual_output = result.stdout
-        except subprocess.CalledProcessError as e:
-            self.fail(f"Pack script execution failed:\n"
-                      f"  Command: {' '.join(e.cmd)}\n"
-                      f"  Exit Code: {e.returncode}\n"
-                      f"  Stdout: {e.stdout}\n"
-                      f"  Stderr: {e.stderr}")
+            sys.stdout = NonTTYStringIO()
+            sys.stderr = NonTTYStringIO()
+            pack.main(argv)
+            stdout = sys.stdout.getvalue()
+            stderr = sys.stderr.getvalue()
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+        with open(self.test_output_file_path, 'r', encoding='utf-8') as f:
+            actual_output = f.read()
 
         with open(golden_file_path, 'r', encoding='utf-8') as f:
             expected_output = f.read()
-
         # Normalize line endings and strip whitespace for consistent comparison
         actual_lines = [line.strip() for line in actual_output.strip().splitlines()]
         expected_lines = [line.strip() for line in expected_output.strip().splitlines()]
@@ -89,7 +109,9 @@ class TestPackE2ESlow(unittest.TestCase):
         self.assertEqual(
             actual_lines,
             expected_lines,
-            f"Output for '{' '.join(cli_args)}' does not match {golden_filename}."
+            f"Output for '{' '.join(cli_args)}' does not match {golden_filename}.\n"
+            f"stdout: {stdout}\n"
+            f"stderr: {stderr}"
         )
 
     def test_pack_token_size_output(self):
@@ -127,7 +149,7 @@ class TestPackE2ESlow(unittest.TestCase):
             cli_args=['-t', '--exclude', '*.yml'],
             golden_filename='swe-bench-5cd4be9fb239716_exclude-yml.txt'
         )
-    
+
     def test_pack_max_file_size(self):
         """
         Tests the '--max-file-size' flag to exclude files larger than 10KB.
