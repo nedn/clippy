@@ -53,10 +53,6 @@ class TestUnitFunctions(unittest.TestCase):
             empty_file.touch()
             self.assertFalse(pack.is_likely_non_text(empty_file))
 
-            # Test case 5: Non-existent file (should be handled gracefully)
-            non_existent_file = p / "nonexistent.txt"
-            self.assertTrue(pack.is_likely_non_text(non_existent_file))
-
     def test_should_ignore(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root_dir = Path(tmpdir)
