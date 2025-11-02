@@ -637,7 +637,7 @@ def write_output(output_target: TextIO, results: list[tuple[str, str]],
             file_content_tokens = count_tokens(file_content)
             total_tokens_of_files += file_content_tokens
             if output_tokens_size_only:
-                to_write = (file_info + 
+                to_write = (file_info +
                     f"{file_content_tokens} tokens, {len(file_content)} bytes\n")
             else:
                 to_write = file_content
@@ -691,7 +691,7 @@ def print_warning_about_large_output(total_tokens_of_output: int,
 
     # The combined command that the user can copy-paste
     suggested_command = (
-        f'(echo "Original directory where the command was run fromm: {os.getcwd()};" '
+        f'(echo "Original directory where the command was run from: {os.getcwd()};" '
         f'echo "Original run command that resulted in large token output: {original_cmd}"; '
         f'echo "--- Help output ---"; {help_cmd}; '
         f'echo "--- File token/size analysis ---"; {token_size_cmd})'
@@ -715,12 +715,12 @@ An example get started:
 --------------------------------------------------------------------------------
 Run: `{suggested_command} > llm_context.txt`
 
-Then add the content of `llm_context.txt` to your prompt and ask the LLM to help 
-you create a new, more selective `pack` command to pack only the files that 
+Then add the content of `llm_context.txt` to your prompt and ask the LLM to help
+you create a new, more selective `pack` command to pack only the files that
 are most relevant to the task.
 
-Example prompt: "I am working on writting feature X. Please help me create a 
-new, more selective `pack` command to pack only the files that are most relevant 
+Example prompt: "I am working on writting feature X. Please help me create a
+new, more selective `pack` command to pack only the files that are most relevant
 to the task. Context is in attached file `llm_context.txt`".
 --------------------------------------------------------------------------------
 """
