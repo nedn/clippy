@@ -311,7 +311,7 @@ def is_likely_non_text(file_path: Path) -> bool:
 
 
 def should_ignore(file_path: Path, root_dir: Path, include_pattern: str,
-                  exclude_pattern: str, max_file_size_bytes: int) -> bool:
+                  exclude_pattern: str, max_file_size_bytes: int) -> tuple[bool, str]:
     """
     Check if a file should be ignored based on defined rules:
     - Not a file or inaccessible
@@ -321,24 +321,27 @@ def should_ignore(file_path: Path, root_dir: Path, include_pattern: str,
     - Does not match the include pattern
     - Matches the exclude pattern
     - Is likely binary.
+
+    Returns a tuple (should_ignore, reason) where should_ignore is a boolean
+    and reason is a string explaining why the file was ignored.
     """
     # 1. Check if it's actually a file (resolve symlinks first)
     try:
         if not file_path.is_file():
             # This might happen with broken symlinks during the walk
-            return True
+            return True, f"{str(file_path.absolute())} is not a file"
         # Check file size
         file_size = file_path.stat().st_size
         if file_size > max_file_size_bytes:
             logging.info(
                 f"Skipping large file {file_path.name} ({file_size} bytes > {max_file_size_bytes} bytes)",
                 file=sys.stderr)
-            return True
+            return True, f"File too large ({file_size} bytes > {max_file_size_bytes} bytes)"
     except OSError as e:
         # Could be a permission error or other issue accessing the file type/stat
         print(f"Warning: Could not check status of {file_path}: {e}",
               file=sys.stderr)
-        return True  # Ignore if we can't verify it's a file or get its size
+        return True, f"Could not check status of {file_path}: {e}"  # Ignore if we can't verify it's a file or get its size
 
     # Use relative path for hidden checks and pattern matching
     try:
@@ -346,41 +349,38 @@ def should_ignore(file_path: Path, root_dir: Path, include_pattern: str,
         relative_path_str = str(relative_path)
     except ValueError:
         # Should not happen if file_path is within root_dir, but handle defensively
-        print(
-            f"Warning: Could not get relative path for {file_path} based on {root_dir}",
-            file=sys.stderr)
-        return True
+        return True, f"Could not get relative path for {file_path} based on {root_dir}"
 
     # 2. Check glob patterns
     # First check exclude pattern (if specified)
     if exclude_pattern and (fnmatch.fnmatch(relative_path_str, exclude_pattern)
                             or fnmatch.fnmatch(file_path.name,
                                                exclude_pattern)):
-        return True
+        return True, f"Matches exclude pattern {exclude_pattern}"
 
     # Then check include pattern
     if include_pattern != '*' and not fnmatch.fnmatch(
             relative_path_str, include_pattern) and not fnmatch.fnmatch(
                 file_path.name, include_pattern):
-        return True
+        return True, f"Does not match include pattern {include_pattern}"
 
     # 3. Check for hidden file/directory
     # Check filename itself
     if file_path.name.startswith('.'):
-        return True
+        return True, "Is a hidden file"
     # Check any parent directory component
     # Use relative_path.parts to avoid checking parts outside the root_dir
     # Check parent parts
     if any(part.startswith('.') for part in relative_path.parts[:-1]):
-        return True
+        return True, "Is in a hidden directory"
 
     # 4. Check for binary content (can be slow, do last)
     if is_likely_non_text(file_path):
         logging.info(f"Skipping likely non text file: {relative_path_str}",
                      file=sys.stderr)
-        return True
+        return True, "Is likely non text"
 
-    return False  # If none of the ignore conditions match
+    return False, "Not ignored"  # If none of the ignore conditions match
 
 
 def read_file_content(file_path: Path,
@@ -416,8 +416,8 @@ def read_file_content(file_path: Path,
         return None
 
 
-def read_files_parallel(files_to_process: list[tuple[Path, Path]], 
-                        num_workers: int,
+def read_files_parallel(files_to_process: list[tuple[Path,
+                                                     Path]], num_workers: int,
                         paths_only: bool) -> list[tuple[str, str]]:
     """
     Read files in parallel using a thread pool.
@@ -470,7 +470,7 @@ def read_files_parallel(files_to_process: list[tuple[Path, Path]],
     return results
 
 
-def collect_results(input_paths_str: list[str], include_pattern: str,
+def collect_files_content(input_paths_str: list[str], include_pattern: str,
                     exclude_pattern: str, max_file_size_bytes: int,
                     num_workers: int, paths_only: bool,
                     using_stdout: bool) -> list[tuple[str, str]]:
@@ -495,67 +495,34 @@ def collect_results(input_paths_str: list[str], include_pattern: str,
         p = Path(path_str).resolve()
 
         if not p.exists():
-            print(f"Warning: Input path not found: {path_str}",
-                  file=sys.stderr)
-            continue
+            raise ValueError(f"Input path not found: {path_str}")
 
         if p in processed_files:
             # Avoid processing the same resolved path twice if listed multiple times
             continue
 
         if p.is_file():
-            # Check if file should be ignored (using simpler rules for explicit files)
-            # Need to check size, binary, and if already processed
-            try:
-                file_size = p.stat().st_size
-                is_too_large = file_size > max_file_size_bytes
-                is_binary = is_likely_non_text(p)
-                is_processed = p in processed_files
-
-                if not is_too_large and not is_binary and not is_processed:
-                    # Use cwd as root for relative path
-                    files_to_process_tuples.append((p, cwd))
-                    processed_files.add(p)
-                else:
-                    reason = []
-                    if is_too_large:
-                        reason.append(
-                            f"too large ({file_size} > {max_file_size_bytes})")
-                    if is_binary:
-                        reason.append("likely binary")
-                    if is_processed:
-                        reason.append("already processed")
-                    print(
-                        f"Info: Ignoring explicitly provided file: {path_str} ({', '.join(reason)})",
-                        file=sys.stderr)
-            except OSError as e:
-                print(
-                    f"Warning: Could not stat explicitly provided file {path_str}: {e}",
-                    file=sys.stderr)
-
+            item, root_dir = p, p.parent
+            should_ignore_result, reason = should_ignore(
+                item, root_dir, include_pattern, exclude_pattern, max_file_size_bytes)
+            if should_ignore_result:
+                print(f"Warning: Ignoring file {item} because {reason}", file=sys.stderr)
+                continue
+            files_to_process_tuples.append((item, root_dir))
+            processed_files.add(item)
         elif p.is_dir():
             print(f"Scanning directory: {p}", file=sys.stderr)
-            try:
-                # Use rglob for recursion
-                for item in p.rglob('*'):
-                    # Combine checks for file, not processed, and not ignored
-                    if item not in processed_files and not should_ignore(
-                            item, p, include_pattern, exclude_pattern,
-                            max_file_size_bytes):
-                        files_to_process_tuples.append(
-                            (item, p))  # Use dir 'p' as root
-                        processed_files.add(item)
-            except PermissionError as e:
-                print(f"Warning: Permission denied during scan of {p}: {e}",
-                      file=sys.stderr)
-            except Exception as e:
-                print(f"Error during scan of {p}: {e}", file=sys.stderr)
-                # Decide if we should exit or just continue
-                # continue # Continue with next path for now
+            # Use rglob for recursion
+            for item in p.rglob('*'):
+                if item in processed_files:
+                    continue
+                should_ignore_result, reason = should_ignore(item, p, include_pattern, exclude_pattern, max_file_size_bytes)
+                if should_ignore_result:
+                    continue
+                files_to_process_tuples.append((item, p))
+                processed_files.add(item)
         else:
-            print(
-                f"Warning: Input path is neither a file nor a directory: {path_str}",
-                file=sys.stderr)
+            raise ValueError(f"Input path is neither a file nor a directory: {path_str}")
 
     # --- Filtering & Sorting (Preparation) ---
     print(
@@ -799,7 +766,7 @@ def main(argv: list[str]):
         using_stdout = True
 
     try:
-        results = collect_results(input_paths_str=input_paths_str,
+        results = collect_files_content(input_paths_str=input_paths_str,
                                   include_pattern=include_pattern,
                                   exclude_pattern=exclude_pattern,
                                   max_file_size_bytes=max_file_size_bytes,

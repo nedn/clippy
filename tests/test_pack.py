@@ -71,25 +71,46 @@ class TestUnitFunctions(unittest.TestCase):
 
 
             # Test Case 1: File larger than max_file_size_bytes
-            self.assertTrue(pack.should_ignore(large_file, root_dir, "*", "", 1000))
-            self.assertFalse(pack.should_ignore(large_file, root_dir, "*", "", 3000))
+            should_ignore_result, reason = pack.should_ignore(large_file, root_dir, "*", "", 1000)
+            self.assertTrue(should_ignore_result)
+            self.assertIn("File too large", reason)
+            
+            should_ignore_result, reason = pack.should_ignore(large_file, root_dir, "*", "", 3000)
+            self.assertFalse(should_ignore_result)
+            self.assertEqual(reason, "Not ignored")
 
             # Test Case 2: Hidden file
-            self.assertTrue(pack.should_ignore(root_dir / ".env", root_dir, "*", "", 5000))
+            should_ignore_result, reason = pack.should_ignore(root_dir / ".env", root_dir, "*", "", 5000)
+            self.assertTrue(should_ignore_result)
+            self.assertEqual(reason, "Is a hidden file")
 
             # Test Case 3: File within a hidden directory
-            self.assertTrue(pack.should_ignore(root_dir / ".git" / "config", root_dir, "*", "", 5000))
+            should_ignore_result, reason = pack.should_ignore(root_dir / ".git" / "config", root_dir, "*", "", 5000)
+            self.assertTrue(should_ignore_result)
+            self.assertEqual(reason, "Is in a hidden directory")
 
             # Test Case 4: include_pattern
-            self.assertFalse(pack.should_ignore(root_dir / "src" / "main.py", root_dir, "*.py", "", 5000))
-            self.assertTrue(pack.should_ignore(root_dir / "src" / "main.py", root_dir, "*.txt", "", 5000))
+            should_ignore_result, reason = pack.should_ignore(root_dir / "src" / "main.py", root_dir, "*.py", "", 5000)
+            self.assertFalse(should_ignore_result)
+            self.assertEqual(reason, "Not ignored")
+            
+            should_ignore_result, reason = pack.should_ignore(root_dir / "src" / "main.py", root_dir, "*.txt", "", 5000)
+            self.assertTrue(should_ignore_result)
+            self.assertIn("Does not match include pattern", reason)
 
             # Test Case 5: exclude_pattern
-            self.assertTrue(pack.should_ignore(root_dir / "src" / "main_test.py", root_dir, "*", "*_test.py", 5000))
-            self.assertFalse(pack.should_ignore(root_dir / "src" / "main.py", root_dir, "*", "*_test.py", 5000))
+            should_ignore_result, reason = pack.should_ignore(root_dir / "src" / "main_test.py", root_dir, "*", "*_test.py", 5000)
+            self.assertTrue(should_ignore_result)
+            self.assertIn("Matches exclude pattern", reason)
+            
+            should_ignore_result, reason = pack.should_ignore(root_dir / "src" / "main.py", root_dir, "*", "*_test.py", 5000)
+            self.assertFalse(should_ignore_result)
+            self.assertEqual(reason, "Not ignored")
 
             # Test Case 6: Likely binary file
-            self.assertTrue(pack.should_ignore(binary_file, root_dir, "*", "", 5000))
+            should_ignore_result, reason = pack.should_ignore(binary_file, root_dir, "*", "", 5000)
+            self.assertTrue(should_ignore_result)
+            self.assertEqual(reason, "Is likely non text")
 
 class TestIntegration(unittest.TestCase):
     def setUp(self):
@@ -112,8 +133,8 @@ class TestIntegration(unittest.TestCase):
     def tearDown(self):
         self.tmpdir.cleanup()
 
-    def test_collect_results_default(self):
-        results = pack.collect_results(
+    def test_collect_files_content_default(self):
+        results = pack.collect_files_content(
             input_paths_str=[str(self.project_dir)],
             include_pattern="*",
             exclude_pattern="",
@@ -137,8 +158,8 @@ class TestIntegration(unittest.TestCase):
         readme_result = next(r for r in results if r[0] == "README.md")
         self.assertEqual(readme_result[1], "readme content")
 
-    def test_collect_results_with_patterns(self):
-        results = pack.collect_results(
+    def test_collect_files_content_with_patterns(self):
+        results = pack.collect_files_content(
             input_paths_str=[str(self.project_dir)],
             include_pattern="src/*.py",
             exclude_pattern="*utils*",
@@ -152,11 +173,15 @@ class TestIntegration(unittest.TestCase):
         self.assertEqual(results[0][0], "src/main.py")
         self.assertEqual(results[0][1], "main content")
 
-    def test_collect_results_mixed_input(self):
-        results = pack.collect_results(
-            input_paths_str=[str(self.project_dir / "src"), str(self.root_dir / "another_file.txt")],
+    def test_collect_files_content_mixed_input(self):
+        another_txt_file = self.root_dir / "another_file.txt"
+        another_txt_file.write_text("another content")
+        another_md_file = self.root_dir / "another_file.md"
+        another_md_file.write_text("another content")
+        results = pack.collect_files_content(
+            input_paths_str=[str(self.project_dir / "src"), str(another_txt_file), str(another_md_file)],
             include_pattern="*",
-            exclude_pattern="",
+            exclude_pattern="*.md",
             max_file_size_bytes=10000,
             num_workers=1,
             paths_only=False,
@@ -164,9 +189,6 @@ class TestIntegration(unittest.TestCase):
         )
         
         relative_paths = sorted([r[0] for r in results])
-        self.assertEqual(len(relative_paths), 3)
-        # Note: relative path for another_file.txt is from CWD of the test runner.
-        # Let's check for the file names instead.
         filenames = sorted([Path(p).name for p in relative_paths])
         self.assertEqual(filenames, ["another_file.txt", "main.py", "utils.py"])
 
