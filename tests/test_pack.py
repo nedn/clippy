@@ -125,8 +125,8 @@ class TestIntegration(unittest.TestCase):
         (self.project_dir / "src" / "utils.py").write_text("utils content")
         (self.project_dir / "tests").mkdir()
         (self.project_dir / "tests" / "test_main.py").write_text("test content")
-        (self.project_dir / ".git").mkdir()
-        (self.project_dir / ".git" / "config").write_text("git stuff")
+        (self.project_dir / ".configs").mkdir()
+        (self.project_dir / ".configs" / "config").write_text("git stuff")
         (self.project_dir / "README.md").write_text("readme content")
         (self.root_dir / "another_file.txt").write_text("another content")
 
@@ -206,12 +206,21 @@ class TestE2EFunctional(unittest.TestCase):
         (self.project_dir / "src" / "utils.py").write_text("utils content")
         (self.project_dir / "tests").mkdir()
         (self.project_dir / "tests" / "test_main.py").write_text("test content")
-        (self.project_dir / ".git").mkdir()
-        (self.project_dir / ".git" / "config").write_text("git stuff")
         (self.project_dir / "README.md").write_text("readme content")
         (self.project_dir / "large_file.log").write_text(
             "a" * 50 + "\n" + "b" * 20 + "\n" + "c" * 70)
         (self.project_dir / "image.png").touch()
+
+        # Initialize git repository to ensure git ls-files doesn't error out
+        subprocess.run(['git', 'init'], cwd=self.project_dir, check=True,
+                      capture_output=True)
+        subprocess.run(['git', 'config', 'user.email', 'test@example.com'],
+                      cwd=self.project_dir, check=True, capture_output=True)
+        subprocess.run(['git', 'config', 'user.name', 'Test User'],
+                      cwd=self.project_dir, check=True, capture_output=True)
+        # Add all files to git so they're tracked by git ls-files
+        subprocess.run(['git', 'add', '.'], cwd=self.project_dir, check=True,
+                      capture_output=True)
 
         # Path to the script
         self.pack_script_path = Path(__file__).parent.parent / "pack"

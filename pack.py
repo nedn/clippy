@@ -71,6 +71,7 @@ Output Behavior:
 
 import argparse
 import sys
+import subprocess
 import os
 import logging
 from pathlib import Path
@@ -311,7 +312,8 @@ def is_likely_non_text(file_path: Path) -> bool:
 
 
 def should_ignore(file_path: Path, root_dir: Path, include_pattern: str,
-                  exclude_pattern: str, max_file_size_bytes: int) -> tuple[bool, str]:
+                  exclude_pattern: str,
+                  max_file_size_bytes: int) -> tuple[bool, str]:
     """
     Check if a file should be ignored based on defined rules:
     - Not a file or inaccessible
@@ -470,10 +472,25 @@ def read_files_parallel(files_to_process: list[tuple[Path,
     return results
 
 
+def is_git_directory(dir_path: Path) -> bool:
+    """Check if a path is a git directory."""
+    return (dir_path / ".git").exists()
+
+
+def list_files_in_git_directory(dir_path: Path) -> list[Path]:
+    """List all files in a git directory using git ls-files.
+    
+    This makes sure we only list files that are actually tracked by git.
+    """
+    files = subprocess.check_output(['git', 'ls-files'],
+                                    cwd=dir_path).decode('utf-8').splitlines()
+    return [dir_path / file for file in files]
+
+
 def collect_files_content(input_paths_str: list[str], include_pattern: str,
-                    exclude_pattern: str, max_file_size_bytes: int,
-                    num_workers: int, paths_only: bool,
-                    using_stdout: bool) -> list[tuple[str, str]]:
+                          exclude_pattern: str, max_file_size_bytes: int,
+                          num_workers: int, paths_only: bool,
+                          using_stdout: bool) -> list[tuple[str, str]]:
 
     cwd = Path('.').resolve()
 
@@ -504,25 +521,40 @@ def collect_files_content(input_paths_str: list[str], include_pattern: str,
         if p.is_file():
             item, root_dir = p, p.parent
             should_ignore_result, reason = should_ignore(
-                item, root_dir, include_pattern, exclude_pattern, max_file_size_bytes)
+                item, root_dir, include_pattern, exclude_pattern,
+                max_file_size_bytes)
             if should_ignore_result:
-                print(f"Warning: Ignoring file {item} because {reason}", file=sys.stderr)
+                print(f"Warning: Ignoring file {item} because {reason}",
+                      file=sys.stderr)
                 continue
             files_to_process_tuples.append((item, root_dir))
             processed_files.add(item)
+        elif is_git_directory(p):
+            print(f"Scanning git directory: {p}", file=sys.stderr)
+            for item in list_files_in_git_directory(p):
+                should_ignore_result, reason = should_ignore(
+                    item, p, include_pattern, exclude_pattern,
+                    max_file_size_bytes)
+                if should_ignore_result:
+                    continue
+                files_to_process_tuples.append((item, p))
+                processed_files.add(item)
         elif p.is_dir():
             print(f"Scanning directory: {p}", file=sys.stderr)
             # Use rglob for recursion
             for item in p.rglob('*'):
                 if item in processed_files:
                     continue
-                should_ignore_result, reason = should_ignore(item, p, include_pattern, exclude_pattern, max_file_size_bytes)
+                should_ignore_result, reason = should_ignore(
+                    item, p, include_pattern, exclude_pattern,
+                    max_file_size_bytes)
                 if should_ignore_result:
                     continue
                 files_to_process_tuples.append((item, p))
                 processed_files.add(item)
         else:
-            raise ValueError(f"Input path is neither a file nor a directory: {path_str}")
+            raise ValueError(
+                f"Input path is neither a file nor a directory: {path_str}")
 
     # --- Filtering & Sorting (Preparation) ---
     print(
@@ -766,13 +798,14 @@ def main(argv: list[str]):
         using_stdout = True
 
     try:
-        results = collect_files_content(input_paths_str=input_paths_str,
-                                  include_pattern=include_pattern,
-                                  exclude_pattern=exclude_pattern,
-                                  max_file_size_bytes=max_file_size_bytes,
-                                  num_workers=num_workers,
-                                  paths_only=paths_only,
-                                  using_stdout=using_stdout)
+        results = collect_files_content(
+            input_paths_str=input_paths_str,
+            include_pattern=include_pattern,
+            exclude_pattern=exclude_pattern,
+            max_file_size_bytes=max_file_size_bytes,
+            num_workers=num_workers,
+            paths_only=paths_only,
+            using_stdout=using_stdout)
 
         total_tokens_of_output = write_output(
             output_target=output_target,
